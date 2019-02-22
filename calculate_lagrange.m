@@ -1,4 +1,4 @@
-function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,M_C,I_C,Q_A,Qacc)
+function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,M_C,I_C,Q_A)
     lambda=zeros(size(Q));
     Q_AC=zeros(size(Q));
     

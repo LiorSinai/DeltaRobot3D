@@ -1,4 +1,4 @@
-function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1,R_L2,R_L3,Qvel,thetaA,time_range,L)
+function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L)
     SIZE_Q=42;
     accelerations = zeros(SIZE_Q,length(time_range));
     
@@ -13,22 +13,22 @@ function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1,R_L2,
         
         % Match R_L symbols to numeric values
         % R_L1
-        R1=R_L1(:,:,timeStep);
-        rL1_1_1 = R1(1,1); rL1_1_2 = R1(1,2); rL1_1_3 = R1(1,3);
-        rL1_2_1 = R1(2,1); rL1_2_2 = R1(2,2); rL1_2_3 = R1(2,3);
-        rL1_3_1 = R1(3,1); rL1_3_2 = R1(3,2); rL1_3_3 = R1(3,3);
+        R_L1=R_L1_t(:,:,timeStep);
+        rL1_1_1 = R_L1(1,1); rL1_1_2 = R_L1(1,2); rL1_1_3 = R_L1(1,3);
+        rL1_2_1 = R_L1(2,1); rL1_2_2 = R_L1(2,2); rL1_2_3 = R_L1(2,3);
+        rL1_3_1 = R_L1(3,1); rL1_3_2 = R_L1(3,2); rL1_3_3 = R_L1(3,3);
 
         % R_L2
-        R2=R_L2(:,:,timeStep);
-        rL2_1_1 = R2(1,1); rL2_1_2 = R2(1,2); rL2_1_3 = R2(1,3);
-        rL2_2_1 = R2(2,1); rL2_2_2 = R2(2,2); rL2_2_3 = R2(2,3);
-        rL2_3_1 = R2(3,1); rL2_3_2 = R2(3,2); rL2_3_3 = R2(3,3);
+        R_L2=R_L2_t(:,:,timeStep);
+        rL2_1_1 = R_L2(1,1); rL2_1_2 = R_L2(1,2); rL2_1_3 = R_L2(1,3);
+        rL2_2_1 = R_L2(2,1); rL2_2_2 = R_L2(2,2); rL2_2_3 = R_L2(2,3);
+        rL2_3_1 = R_L2(3,1); rL2_3_2 = R_L2(3,2); rL2_3_3 = R_L2(3,3);
 
         % R_L3
-        R3=R_L3(:,:,timeStep);
-        rL3_1_1 = R3(1,1); rL3_1_2 = R3(1,2); rL3_1_3 = R3(1,3);
-        rL3_2_1 = R3(2,1); rL3_2_2 = R3(2,2); rL3_2_3 = R3(2,3);
-        rL3_3_1 = R3(3,1); rL3_3_2 = R3(3,2); rL3_3_3 = R3(3,3);
+        R_L3=R_L3_t(:,:,timeStep);
+        rL3_1_1 = R_L3(1,1); rL3_1_2 = R_L3(1,2); rL3_1_3 = R_L3(1,3);
+        rL3_2_1 = R_L3(2,1); rL3_2_2 = R_L3(2,2); rL3_2_3 = R_L3(2,3);
+        rL3_3_1 = R_L3(3,1); rL3_3_2 = R_L3(3,2); rL3_3_3 = R_L3(3,3);
         
         thetaA1=thetaA(1,timeStep);
         thetaA2=thetaA(2,timeStep);
