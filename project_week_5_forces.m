@@ -3,7 +3,14 @@
 % run project_week_5.m first with calculate=true
 
 % Calculates forces and moments base on the Lagrange multiplier method 
-[lambda, Q_AC]=calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,R1,R2,R3,Qvel,thetaA_t,time_range,M_C,I_C,Q_A,Qacc);
+% tic
+% [lambda, Q_AC]=calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Qacc,R1,R2,R3,Qvel,thetaA_t,time_range,M_C,I_C,Q_A);
+% toc
+tic
+[lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R1,R2,R3,Qvel,thetaA_t,time_range,L,M_C,I_C,Q_A);
+toc
+
+
 
 %% Intialise the wrenches structure
 % constraint forces for actuator 1
