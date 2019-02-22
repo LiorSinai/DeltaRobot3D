@@ -1,0 +1,140 @@
+\section{Maths for 3D motion}
+Position
+\begin{equation}
+    \Phi=
+    \begin{bmatrix}
+    \begin{array}{l} % for proper alignment
+    M+R_{A,j}\begin{bmatrix}\frac{D}{2} \\ 0 \\0 \end{bmatrix} - U_j - R_{U,j} \begin{bmatrix}0\\ 0 \\\frac{L_u}{2}  \end{bmatrix}  \vspace{0.5em}\\
+   %\\
+    U_j+R_{U,j}\begin{bmatrix}0 \\ 0 \\-\frac{L_u}{2} \end{bmatrix} - L_j - R_{L,j} \begin{bmatrix}0\\ 0 \\\frac{L_l}{2}  \end{bmatrix}  \vspace{0.5em}\\
+    %\\
+    L_j+R_{L,j}\begin{bmatrix}0 \\ 0 \\ \frac{-L_l}{2} \end{bmatrix} - P - R_{A,j} \begin{bmatrix}\frac{L_e}{2}\\ 0 \\0 \end{bmatrix}  \vspace{0.5em} \\
+    %\\
+    \begin{bmatrix} 0 & 1 & 0 \end{bmatrix}R_{L,j}^T(R_{L,j})_0\begin{bmatrix} 1\\ 0 \\0\end{bmatrix}
+    \end{array}\\
+    %\vdots \\
+    \vdots
+    %\vdots
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    \Phi^{driving}=
+    \begin{bmatrix}
+    \begin{array}{l} % for proper alignment
+    (\theta_{U,j})_x + sin((\theta_{a,j})_0)\omega_j t - 0\\
+    (\theta_{U,j})_y - cos((\theta_{a,j})_0)\omega_j t - (\theta_{a,j})_0 \\
+    (\theta_{U,j})_z - (\theta_{U,j})_{z,0}
+    \end{array}\\
+    \vdots
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    \Phi_q \dot{q}=
+    \begin{bmatrix}
+    \begin{array}{cccccc} % for proper alignment
+    I & -I & -R_{U,j}{\tilde r}^{U,A}_U R_{U,j}^T & 0 & 0 & ... \\
+    0 &  I & +R_{U,j}{\tilde r}^{U,B}_U R_{U,j}^T & -I& -R_{L,j}{\tilde r}^{L,B}_L R_{L,j}^T & ...\\
+    0 & 0 & 0 & I & +R_{L,j}{\tilde r}^{L,C}_L R_{L,j}^T & ... \\
+    0 & 0 & 0 & 0 & e_{y}^0 R_{L,j}^T \tilde{e}_{x}^{U} & ... 
+    \end{array}\\
+    \vdots
+    \end{bmatrix}
+    \begin{bmatrix}
+    \dot{M} \\
+    \dot{U}_j \\
+    \omega_{U,j} \\
+    \dot{L}_J \\
+    \omega_{L,j} \\
+    \vdots
+    \end{bmatrix}
+\end{equation}
+
+Independent and Dependent Co-ordinates
+\begin{equation}
+    q_i=
+    \begin{bmatrix}
+    (\theta_{U,1})_x \\
+    (\theta_{U,1})_y \\
+    (\theta_{U,1})_z \\
+    \vdots
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    q_a=
+    \begin{bmatrix}
+    \theta_{a,1} \\
+    \theta_{a,2} \\
+    \theta_{a,3}
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\omega^{0,U}_a&=R^0_U \omega^{U,U}_a \\
+ &=    \begin{bmatrix}
+    cos(\theta_a) cos(\psi_0) & -sin(\psi_0) & cos(\psi_0) sin(\theta_a) \\
+    cos(\theta_a) sin(\psi_0) & cos(\psi_0) & sin(\psi_0) sin(\theta_a)\\
+    -sin(\theta_a) & 0 & cos(\theta_a) 
+    \end{bmatrix}
+    \begin{bmatrix}
+    0 \\ \omega_a \\0
+    \end{bmatrix}\\
+&=\begin{bmatrix}
+   -sin(\psi_0)\omega_a  \\ cos(\psi_0)\omega_a   \\0
+    \end{bmatrix} \\
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\int \omega^{0,U}_a&=\int R^0_U \omega^{U,U}_a \\
+%\theta_U - \begin{bmatrix} 0\\\theta_{a,0}\\\psi_0 \end{bmatrix}
+%&=\begin{bmatrix}
+        % -sin(\psi_0)\theta_a-\theta_{a,0} \\ cos(\psi_0)\theta_a-\theta_{a,0}  \\0
+        %  \end{bmatrix}  \
+\theta_U &= 
+\begin{bmatrix} 
+-sin(\psi_0)\theta_a-\theta_{a,0} \\ cos(\psi_0)\theta_a \\ \psi_0
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+Inverse kinematics
+\begin{equation}
+    \begin{aligned}
+    r&= R_{A,j}\begin{bmatrix}\frac{D-L_e}{2}\\0\\0 \end{bmatrix} - R_{U,j}\begin{bmatrix}0\\0\\L_u  \end{bmatrix} - P &=
+    R_{L,j}\begin{bmatrix}0\\0\\L_l  \end{bmatrix} \\
+    r^Tr&=r^TR^TRr &
+    \end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+        \left(\left(\frac{D-L_e}{2}-L_u sin(\theta_{a,j})\right)cos(\psi_0)-P_x\right)^2 &+ \\
+        \left(\left(\frac{D-L_e}{2}-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2 &+\\
+        (-L_ucos(\theta_{a,j})-P_z)^2 &= L_l^2
+\end{aligned}
+\end{equation}
+% \begin{equation}
+%     \Phi^{IK}=
+%     \begin{bmatrix}
+%      +\dots\\
+%     ...
+%     \end{bmatrix}
+% \end{equation}
+
+\begin{equation}
+\begin{aligned}
+    \ddot{q}_a=-(\Phi^{IK}_{q_a})^{-1}(\Phi^{IK}_{PP}\dot{P} +2\Phi^{IK}_{q_aP}\dot{q}_a\dot{P} + \Phi^{IK}_{q_a q_a}\dot{q}_a +\Phi^{IK}_{P}\ddot{P} )
+\end{aligned}
+\end{equation}
+
+% Computer Torque Control
+% \begin{align}
+%          J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
+%  \dot{q}_d&=-J\dot{q}_i\\
+%   \hat{M}&=M_{ii}+ J^T M_{dd}J\\
+%   \hat{Q}&=-J^T Q_{A,d}+J^T M_{dd}\Phi_{q_d}^{-1}\gamma
+% \end{align}

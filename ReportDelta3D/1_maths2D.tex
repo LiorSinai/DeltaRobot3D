@@ -1,0 +1,74 @@
+\section{Maths for 2D motion}
+
+Position
+\begin{equation}
+    \Phi=
+    \begin{bmatrix}
+    \begin{array}{l} % for proper alignment
+    M_x\mp\frac{D}{2}-U_{j,x}-\frac{L_u}{2} cos(\theta_{U,j}) \\
+    M_y-U_{j,y}-\frac{L_u}{2} sin(\theta_{U,j})\\
+    U_{j,x}-\frac{L_u}{2}cos(\theta_{U,j})-L_{j,x}-\frac{L_l}{2}cos(\theta_{L,j}) \\
+    U_{j,y}-\frac{L_u}{2}sin(\theta_{U,j})-L_{j,x}-\frac{L_l}{2}sin(\theta_{L,j})\\
+    L_{j,x}-\frac{L_l}{2}cos(\theta_{L,j})-P_x \pm \frac{L_e}{2} \\
+    L_{j,y}-\frac{L_l}{2}sin(\theta_{L,j})-P_y%\\
+    %\theta_{U,j} - \omega_i t - (\theta_{U,j})_0
+    \end{array}\\
+    \vdots \\
+    \vdots
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    \Phi^{driving}=
+    \begin{bmatrix}
+    \theta_{U,1} - \omega_1 t - (\theta_{U,1})_0\\
+    \theta_{U,2} - \omega_2 t - (\theta_{U,2})_0
+    \end{bmatrix}
+\end{equation}
+
+Independent and Dependent Co-ordinates
+\begin{equation}
+    q_i=
+    \begin{bmatrix}
+    \theta_{U,1} \\
+    \theta_{U,2}
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    q_d=
+    \begin{bmatrix}
+    \; \; \vdots \; \;
+    \end{bmatrix}
+\end{equation}
+
+\begin{align}
+         J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
+ \dot{q}_d&=-J\dot{q}_i\\
+   \hat{M}&=M_{ii}+ J^T M_{dd}J\\
+   \hat{Q}&=-J^T Q_{A,d}+J^T M_{dd}\Phi_{q_d}^{-1}\gamma
+\end{align}
+
+Inverse Kinematics
+\begin{equation}
+    \Phi^{IK}=
+    \begin{bmatrix}
+     (\mp \frac{D}{2}-L_u cos(\theta_{U,j})\pm\frac{L_e}{2}-P_x)^2+(P_y+L_u sin(\theta_{U,j}))^2-L_l^2 \\
+         \vdots
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+    \ddot{q}_i=-(\Phi^{IK}_{q_i})^{-1}(\Phi^{IK}_{PP}\dot{P} +2\Phi^{IK}_{q_iP}\dot{q}_i\dot{P} + \Phi^{IK}_{q_i q_i}\dot{q}_i +\Phi^{IK}_{P}\ddot{P} )
+\end{aligned}
+\end{equation}
+
+% \begin{align}
+%     M_{ii}=
+%     \begin{bmatrix}
+%     I_{upper} & 0\\
+%     0 & I_{upper} 
+%     \end{bmatrix}
+% \end{align}
+
