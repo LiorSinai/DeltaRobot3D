@@ -1,6 +1,13 @@
 \section{Maths for 2D motion}
 
-Position
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/Initial_2D.png}                                                              
+	\caption[Initial configuration of the 2D Delta robot]{Initial configuration of the 2D Delta robot.}
+	\label{fig:initia2D}
+\end{figure}
+
+Constraint equations
 \begin{equation}
     \Phi=
     \begin{bmatrix}
@@ -27,21 +34,29 @@ Position
 \end{equation}
 
 Independent and Dependent Co-ordinates
-\begin{equation}
-    q_i=
+\begin{align}
+    q_i&=
     \begin{bmatrix}
     \theta_{U,1} \\
     \theta_{U,2}
-    \end{bmatrix}
-\end{equation}
-
-\begin{equation}
-    q_d=
+    \end{bmatrix} &
+    q_d&=
     \begin{bmatrix}
     \; \; \vdots \; \;
     \end{bmatrix}
-\end{equation}
+\end{align}
 
+Kinematics
+\begin{align}
+            \Phi &= 0  \nonumber \\
+\implies \tfrac{d\Phi}{dt} &=\Phi_q \tfrac{dq}{dt}+ \Phi_t =0 \label{eq:PhiDot} \\
+\therefore \tfrac{dq}{dt}&=-\Phi_q^{-1} \Phi_t \\
+\implies \tfrac{d^2\Phi}{dt^2} &=([\Phi_{q}\tfrac{dq}{dt}]_q\tfrac{dq}{dt}+[\Phi_{q}\tfrac{dq}{dt}]_t)+(\Phi_{tq}\tfrac{dq}{dt}+\Phi_{tt})=0 \label{eq:PhiDDot} \\
+\therefore  \tfrac{d^2q}{dt^2}&=-\Phi_q^{-1} (\Phi_{qq}\tfrac{dq}{dt}^2+2\Phi_{qt}\tfrac{dq}{dt}+\Phi_{tt}) \nonumber \\
+                    &=\Phi_q^{-1} \gamma \label{eq:Gamma}
+\end{align}
+
+Embedded form:
 \begin{align}
          J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
  \dot{q}_d&=-J\dot{q}_i\\
@@ -50,19 +65,34 @@ Independent and Dependent Co-ordinates
 \end{align}
 
 Inverse Kinematics
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/Inverse_2D.png}                                                              
+	\caption[Interpretation of the inverse kinematics equation]{Interpretation of the inverse kinematics equation. The circles are centered at $x=\mp\tfrac{1}{2}D-L_u cos(\theta_{U,j})\pm\tfrac{1}{2}L_e$  and $y=-L_u sin(\theta_{U,j})$}
+	\label{fig:inverse2D}
+\end{figure}
+
+
 \begin{equation}
     \Phi^{IK}=
     \begin{bmatrix}
-     (\mp \frac{D}{2}-L_u cos(\theta_{U,j})\pm\frac{L_e}{2}-P_x)^2+(P_y+L_u sin(\theta_{U,j}))^2-L_l^2 \\
+     (\mp \frac{D}{2}-L_u cos(\theta_{U,j})\pm\frac{L_e}{2}-P_x)^2+(-P_y-L_u sin(\theta_{U,j}))^2-L_l^2 \\
          \vdots
     \end{bmatrix}
 \end{equation}
 
-\begin{equation}
-\begin{aligned}
-    \ddot{q}_i=-(\Phi^{IK}_{q_i})^{-1}(\Phi^{IK}_{PP}\dot{P} +2\Phi^{IK}_{q_iP}\dot{q}_i\dot{P} + \Phi^{IK}_{q_i q_i}\dot{q}_i +\Phi^{IK}_{P}\ddot{P} )
-\end{aligned}
-\end{equation}
+\begin{align}
+\Phi^{IK} &= 0  \nonumber \\
+\implies \tfrac{d\Phi}{dt} &=\Phi_{q_i} \tfrac{dq_i}{dt}+\Phi_{P} \tfrac{dP}{dt}  =0\\
+\begin{split}
+\implies 
+\tfrac{d^2\Phi}{dt^2} =&([\Phi_{q_i}\tfrac{dq_i}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{q_i}\tfrac{dq_i}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{q_i}\tfrac{d^2q_i}{dt^2}+\\
+                           &([\Phi_{P}\tfrac{dP}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{P}\tfrac{dP}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{P}\tfrac{d^2P}{dt^2}=0
+\end{split}\\
+\therefore  \tfrac{d^2q_i}{dt^2}&=-\Phi_{q_i}^{-1} (\Phi_{q_iq_i}\tfrac{dq_i}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_iP}\tfrac{dq_i}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt}) 
+\end{align}
+
 
 % \begin{align}
 %     M_{ii}=

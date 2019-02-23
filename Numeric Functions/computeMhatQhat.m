@@ -172,7 +172,5 @@ J2 = Jacobian_d\Gamma_without_driving;
 Mhat = Mii - Mid*J - J.'*(Mdi - Mdd*J); 
 Qhat = Q_Ai-Mid*J2 -(J.')*(Q_Ad -Mdd*J2);
 
-%M_0=eye(9,9);
-
 end
 
