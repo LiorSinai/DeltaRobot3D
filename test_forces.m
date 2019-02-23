@@ -7,13 +7,13 @@
 %   the force structure
 
 %% check errors
-errorForcesResidue=zeros(9,Nvalid);
-errorMomentsResidue=zeros(9,Nvalid);
-
-
 Nvalid=size(thetaA_t,2); % number of valid points
 time_valid=time_range(1:Nvalid); % if a singularity was hit, the valid_time
                                  % will be shorter than the time_range
+                                 
+errorForcesResidue=zeros(9,Nvalid);
+errorMomentsResidue=zeros(9,Nvalid);
+
 for timeStep = 1:Nvalid
     % map values
     forcesA1=wrenches(1).forces(:,timeStep);
@@ -89,6 +89,7 @@ end
 % an applied moment has to counter-act this
 figure;plot(1:Nvalid,M1,'-xb',1:Nvalid,M2,'-xr',1:Nvalid,M3,'-xg',...
             1:Nvalid,M4,'-xm',1:Nvalid,M5,'-xk');
+title('Components of the forces')
 grid;legend(textLegend,'interpreter','latex');
 
 %% plot error residues
