@@ -21,9 +21,9 @@ function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qv
     R_A2=rot3D_Rodrigues([0;0;1],thetaU2_z_0); % constant
     R_A3=rot3D_Rodrigues([0;0;1],thetaU3_z_0); % constant
    
-    N=length(time_range);
+    N=size(thetaA,2);
     fprintf('%d time steps. Progess of lambdas: 000.0%%\n',N)
-    for timeStep = 1:length(time_range)
+    for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of lambdas\n',timeStep,100*timeStep/length(time_range))
         fprintf('\b\b\b\b\b\b\b')  %delete new line, % sign, previous number
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number

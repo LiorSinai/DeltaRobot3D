@@ -1,7 +1,9 @@
 function [forces,moments] = calculate_forces(Jacobian,Q_sym,R_sym,thetaA_sym,Q,R_L1_t,R_L2_t,R_L3_t,thetaA,time_range,lambda,indQ,indPhi,r)
     % Use the Lagrange multiplier method to find the forces at a point
     % where the contraint equation in Phi are applied
-    forces=zeros(3,length(time_range));
+    N=size(thetaA,2);
+    
+    forces=zeros(3,N);
     moments=forces;
     
     % Note unlike in the main code, it is assumed variables are numeric
@@ -16,9 +18,8 @@ function [forces,moments] = calculate_forces(Jacobian,Q_sym,R_sym,thetaA_sym,Q,R
     
     % r = vector from the CoM co-ordinate to the contraint co-ordinate
     
-    N=length(time_range);
     fprintf('%d time steps. Progess of forces: 000.0%%\n',N)
-    for timeStep = 1:length(time_range)
+    for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of forces\n',timeStep,100*timeStep/length(time_range))
         fprintf('\b\b\b\b\b\b\b')  %delete previous number and new line
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number

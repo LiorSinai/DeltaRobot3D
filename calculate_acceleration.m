@@ -1,5 +1,6 @@
 function accelerations = calculate_acceleration(Jacobian,Vt_sym,Q_sym,R_sym,thetaA_sym,t_sym,Q,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L)
-    accelerations = zeros(length(Q_sym),length(time_range));
+    N=size(thetaA,2);
+    accelerations = zeros(length(Q_sym),N);
     
     % Note unlike in the main code, it is assumed variables are numeric
     % E.g. R_L1 is a numeric matrix
@@ -8,9 +9,8 @@ function accelerations = calculate_acceleration(Jacobian,Vt_sym,Q_sym,R_sym,thet
    R_L2_0=R_L2_t(:,:,1);
    R_L3_0=R_L3_t(:,:,1);
     
-    N=length(time_range);
     fprintf('%d time steps. Progess of accelerations: 000.0%%\n',N)
-    for timeStep = 1:length(time_range)
+    for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of accelerations\n',timeStep,100*timeStep/length(time_range))
         fprintf('\b\b\b\b\b\b\b')  %delete new line, % sign, previous number
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number

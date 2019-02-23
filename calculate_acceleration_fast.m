@@ -1,8 +1,8 @@
 function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L)
     SIZE_Q=42;
-    accelerations = zeros(SIZE_Q,length(time_range));
+    N=size(thetaA,2);
+    accelerations = zeros(SIZE_Q,N);
     
-    N=length(time_range);
     fprintf('%d time steps. Progess of accelerations: 000.0%%\n',N)
     for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of accelerations\n',timeStep,100*timeStep/length(time_range))

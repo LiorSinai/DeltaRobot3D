@@ -53,6 +53,12 @@ for k = 1:N
             fprintf('aborting calculations\n')
             % shorten time_range
             time_range=time_range(1:k+1);
+            Q=Q(:,1:k+1);
+            R1_out=R1_out(:,:,1:k+1);
+            R2_out=R2_out(:,:,1:k+1);
+            R3_out=R3_out(:,:,1:k+1);
+            thetaA_t=thetaA_t(:,1:k+1);
+            
             singularity=true;
             break;
         end

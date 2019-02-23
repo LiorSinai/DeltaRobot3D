@@ -13,9 +13,9 @@ function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Q
    I_lower_yy=I_C(5);
    I_lower_zz=I_C(6);
       
-    N=length(time_range);
+    N=size(thetaA,2);
     fprintf('%d time steps. Progess of lambdas: 000.0%%\n',N)
-    for timeStep = 1:length(time_range)
+    for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of lambdas\n',timeStep,100*timeStep/length(time_range))
         fprintf('\b\b\b\b\b\b\b')  %delete new line, % sign, previous number
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number

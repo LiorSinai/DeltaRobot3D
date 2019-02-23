@@ -7,10 +7,14 @@
 %   the force structure
 
 %% check errors
-errorForcesResidue=zeros(9,length(time_range));
-errorMomentsResidue=zeros(9,length(time_range));
+errorForcesResidue=zeros(9,Nvalid);
+errorMomentsResidue=zeros(9,Nvalid);
 
-for timeStep = 1:length(time_range)
+
+Nvalid=size(thetaA_t,2); % number of valid points
+time_valid=time_range(1:Nvalid); % if a singularity was hit, the valid_time
+                                 % will be shorter than the time_range
+for timeStep = 1:Nvalid
     % map values
     forcesA1=wrenches(1).forces(:,timeStep);
     forcesB1=wrenches(2).forces(:,timeStep);
@@ -31,7 +35,8 @@ for timeStep = 1:length(time_range)
    % moment balance in the body fixed frame C
    % I_c*alphaC+tilde(omegaC)*I_c*omegaC = tilde(r^U_A)*F^A_U+tilde(r^U_B)*F^A_B
    %                                       +[0;M_A;0]
-   R=eval(subs(R_U1,thetaA1,thetaA_t(1,timeStep)));
+   %R=eval(subs(R_U1,thetaA1,thetaA_t(1,timeStep)));
+   R=R_A1*rot3D_Rodrigues([0;1;0],thetaA_t(1,timeStep));%=R_U1 faster
    alphaC=R'*Qacc(7:9,timeStep);
    omegaC=R'*Qvel(7:9,timeStep); 
    momentsC=wrenches(1).momentsC(:,timeStep);
@@ -46,8 +51,14 @@ for timeStep = 1:length(time_range)
    M3(:,timeStep)=tilde([0; 0 ;+L(1)/2])*R'*forcesA1;
    M4(:,timeStep)=tilde([0; 0 ;-L(1)/2])*R'*forcesB1;
    M5(:,timeStep)=momentsC;
+   textLegend={'$I\alpha$','','',...
+               '$\tilde{\omega}I\omega$','','',...
+               '$r_A\times R^T F_{A,1}$','','',...
+               '$r_B\times R^T F_{B,1}$','','',...
+               '$M_{a}$','',''};
    
-   R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep)));
+   %R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep)));  % slow
+   R=R_A2*rot3D_Rodrigues([0;1;0],thetaA_t(2,timeStep));%=R_U2
    omegaC=R'*Qvel(19:21,timeStep); 
    alphaC=R'*Qacc(19:21,timeStep);
    momentsC=wrenches(3).momentsC(:,timeStep);
@@ -57,7 +68,8 @@ for timeStep = 1:length(time_range)
                                 -tilde([0; 0 ;-L(1)/2])*R'*forcesB2+...
                                 -momentsC;
 
-   R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep)));
+   %R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep)));
+   R=R_A3*rot3D_Rodrigues([0;1;0],thetaA_t(3,timeStep)); %=R_U3
    omegaC=R'*Qvel(31:33,timeStep); 
    alphaC=R'*Qacc(31:33,timeStep);
    momentsC=wrenches(5).momentsC(:,timeStep);
@@ -75,16 +87,16 @@ end
 % This does not seem to be an error, as the asymmetry of the sitatuion
 % tends to rotate the delta robot about the x axis, and therefore
 % an applied moment has to counter-act this
-N=length(time_range);
-figure;plot(1:N,M1,'-xb',1:N,M2,'-xr',1:N,M3,'-xg',1:N,M4,'-xm',1:N,M5,'-xk');
-grid;legend;
+figure;plot(1:Nvalid,M1,'-xb',1:Nvalid,M2,'-xr',1:Nvalid,M3,'-xg',...
+            1:Nvalid,M4,'-xm',1:Nvalid,M5,'-xk');
+grid;legend(textLegend,'interpreter','latex');
 
 %% plot error residues
 figure; 
-plot(1:length(time_range),errorForcesResidue,'-x'); legend; grid
+plot(1:Nvalid,errorForcesResidue,'-x'); legend; grid
 title('Error residues for forces')
 figure; 
-plot(1:length(time_range),errorMomentsResidue,'-x'); legend; grid
+plot(1:Nvalid,errorMomentsResidue,'-x'); legend; grid
 title('Error residues for moments')
 
 %save(sprintf('TestRun_%s',timestamp)); % save all variables

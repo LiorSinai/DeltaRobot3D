@@ -1,13 +1,14 @@
 function velocities = calculate_velocity_fast( Phi_t_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,thetaA,time_range,L)
     SIZE_Q=42;
-    velocities = zeros(SIZE_Q,length(time_range));
+    N=size(thetaA,2);
+    velocities = zeros(SIZE_Q,N);
     
     % To decrease calculation term further, manually recreate Phi_t
     % But this limits the application, as Phi_t can change easily based on
     % the desired input moments, but the the Jacobian should be the same 
     % for all configurations of the Delta Robot
 %     Phi_t=zeros(SIZE_Q,1);
-    N=length(time_range);
+
     fprintf('%d time steps. Progess of velocities: 000.0%%\n',N)
     for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of velocities\n',step,100*step/length(time_range))

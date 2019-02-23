@@ -23,18 +23,18 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % end_time = 2;
 
 % Twist settings
-omega = 0.5*[0.1;1;1];
-delta_t = 0.01;
-delay_between_plots = delta_t;
-tolerance = 0.00001;
-end_time = 3;
-
-% Singularity settings
-% omega = 0.5*[1;0;0];
+% omega = 0.5*[1;0.1;1];
 % delta_t = 0.01;
 % delay_between_plots = delta_t;
-% tolerance = 0.0001;
-% end_time = 4;
+% tolerance = 0.00001;
+% end_time = 3;
+
+% Singularity settings
+omega = 0.5*[1;0;0];
+delta_t = 0.01;
+delay_between_plots = delta_t;
+tolerance = 0.0001;
+end_time = 4;
 
 % Full cycle settings
 % L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
@@ -322,15 +322,18 @@ end
 
 %% Plot Matrix
 if plotBoolean == true
+   Nvalid=size(thetaA_t,2); % length of
+   time_valid=time_range(1:Nvalid); % if a singularity was hit, the valid_time
+                               % will be shorter than the time_range 
     if plot_velocityBoolean == true
-        plot_velocity(Qvel,time_range);
+        plot_velocity(Qvel,time_valid);
     end
     if plot_accelerationBoolean == true
-        plot_accelerations2(Qacc,time_range);
-        plot_tangents(Qvel, Qacc,time_range);
+        plot_accelerations2(Qacc,time_valid);
+        plot_tangents(Qvel, Qacc,time_valid);
     end
      if plot_positionBoolean == true
-        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R1,R2,R3,thetaA_t,time_range,delay_between_plots )
+        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
     end
 end
 
