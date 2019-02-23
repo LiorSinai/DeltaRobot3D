@@ -49,8 +49,8 @@ for k = 1:N
     while (norm(S) > tolerance)&& (~singularity)
         newton_iterations = newton_iterations +1;
         if newton_iterations>maxIteration
-            fprintf('iterions = %d. Probably hit a singularity\n',newton_iterations)
-            fprintf('aborting calculations\n')
+            warning('iterions = %d. Probably hit a singularity\n',newton_iterations)
+            warning('aborting calculations\n')
             % shorten time_range
             time_range=time_range(1:k+1);
             Q=Q(:,1:k+1);

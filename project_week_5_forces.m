@@ -119,14 +119,17 @@ wrenches(3).momentsC=wrenches(1).momentsC;
 % actuator 3
 wrenches(5).momentsC=wrenches(1).momentsC;
 
-for timeStep = 1:length(time_range)
-    R=eval(subs(R_U1,thetaA1,thetaA_t(1,timeStep)));
+for timeStep = 1:Nvalid
+    %R=eval(subs(R_U1,thetaA1,thetaA_t(1,timeStep))); %slow
+    R=R_A1*rot3D_Rodrigues([0;1;0],thetaA_t(1,timeStep));
     wrenches(1).momentsC(:,timeStep)=R'*wrenches(1).moments(:,timeStep);
-
-    R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep)));
+    
+    %R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep))); %slow
+    R=R_A2*rot3D_Rodrigues([0;1;0],thetaA_t(2,timeStep));
     wrenches(3).momentsC(:,timeStep)=R'*wrenches(3).moments(:,timeStep);
     
-    R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep)));
+    %R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep))); % slow
+    R=R_A3*rot3D_Rodrigues([0;1;0],thetaA_t(3,timeStep));
     wrenches(5).momentsC(:,timeStep)=R'*wrenches(5).moments(:,timeStep);
 end
 

@@ -65,6 +65,7 @@ function plot_velocity( velocities,time_range )
     plot(time_range,L1vz,'--')
     legend('U1v_x','U1v_y','U1v_z','L1v_x','L1v_y','L1v_z')
     title('Centre of masses of arm 1: linear velocities');
+    grid;
     subplot(3,2,2)
     hold on
     plot(time_range,omegaU1,'-')
@@ -72,6 +73,7 @@ function plot_velocity( velocities,time_range )
     title('Centre of masses of arm 1: angular velocites');
     legend('\omega_{U1,x}','\omega_{U1,y}','\omega_{U1,z}',...
            '\omega_{L1,x}','\omega_{L1,y}','\omega_{L1,z}')
+    grid;
     
     %plot velocities of 2 centers of mass arm2 
     subplot(3,2,3)
@@ -84,13 +86,15 @@ function plot_velocity( velocities,time_range )
     plot(time_range,L2vz,'--')
     legend('U2v_x','U2v_y','U2v_z','L2v_x','L2v_y','L2v_z')
     title('Centre of masses of arm 2: linear velocities');
+    grid;
     subplot(3,2,4)
     hold on
     plot(time_range,omegaU2,'-')
     plot(time_range,omegaL2,'--')
     title('Centre of masses of arm 2: angular velocites');
     legend('\omega_{U2,x}','\omega_{U2,y}','\omega_{U2,z}',...
-           '\omega_{L2,x}','\omega_{L2,y}','\omega_{L2,z}')   
+           '\omega_{L2,x}','\omega_{L2,y}','\omega_{L2,z}') 
+    grid;
        
     %plot velocities of 2 centers of mass arm2
     subplot(3,2,5)
@@ -110,7 +114,7 @@ function plot_velocity( velocities,time_range )
     title('Centre of masses of arm 3: angular velocites');
     legend('\omega_{U3,x}','\omega_{U3,y}','\omega_{U3,z}',...
            '\omega_{L3,x}','\omega_{L3,y}','\omega_{L3,z}')  
-    
+    grid;
     %plot 3 velocities end-effector
     figure;
     hold on
@@ -123,4 +127,5 @@ function plot_velocity( velocities,time_range )
         'v_z'...
     );
     title('end-effector center of Mass')
+    grid;
 end

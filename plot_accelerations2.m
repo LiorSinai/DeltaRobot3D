@@ -66,12 +66,12 @@ function plot_accelerations2( velocities,time_range )
     plot(time_range,L1vy,'--')
     plot(time_range,L1vz,'--')
     legend('U1a_x','U1a_y','U1a_z','L1a_x','L1a_y','L1a_z')
-    title('Centre of masses of arm 1: linear accelerations');
+    title('Centre of masses of arm 1: linear accelerations'); grid;
     subplot(3,2,2)
     hold on
     plot(time_range,omegaU1,'-')
     plot(time_range,omegaL1,'--')
-    title('Centre of masses of arm 1: angular accelerations');
+    title('Centre of masses of arm 1: angular accelerations'); grid;
     legend('\alpha_{U1,x}','\alpha_{U1,y}','\alpha_{U1,z}',...
            '\alpha_{L1,x}','\alpha_{L1,y}','\alpha_{L1,z}')
     
@@ -85,12 +85,12 @@ function plot_accelerations2( velocities,time_range )
     plot(time_range,L2vy,'--')
     plot(time_range,L2vz,'--')
     legend('U2a_x','U2a_y','U2a_z','L2a_x','L2a_y','L2a_z')
-    title('Centre of masses of arm 2: linear accelerations');
+    title('Centre of masses of arm 2: linear accelerations'); grid;
     subplot(3,2,4)
     hold on
     plot(time_range,omegaU2,'-')
     plot(time_range,omegaL2,'--')
-    title('Centre of masses of arm 2: angular accelerations');
+    title('Centre of masses of arm 2: angular accelerations'); grid;
     legend('\alpha_{U2,x}','\alpha_{U2,y}','\alpha_{U2,z}',...
            '\alpha_{L2,x}','\alpha_{L2,y}','\alpha_{L2,z}')   
        
@@ -103,13 +103,13 @@ function plot_accelerations2( velocities,time_range )
     plot(time_range,L3vx,'--')
     plot(time_range,L3vy,'--')
     plot(time_range,L3vz,'--')
-    title('Centre of masses of arm 3: linear accelerations');
+    title('Centre of masses of arm 3: linear accelerations'); grid;
     legend('U3a_x','U3a_y','U3a_z','L3a_x','L3a_y','L3a_z')
     subplot(3,2,6)
     hold on
     plot(time_range,omegaU3,'-')
     plot(time_range,omegaL3,'--')
-    title('Centre of masses of arm 3: angular accelerations');
+    title('Centre of masses of arm 3: angular accelerations'); grid;
     legend('\alpha_{U3,x}','\alpha_{U3,y}','\alpha_{U3,z}',...
            '\alpha_{L3,x}','\alpha_{L3,y}','\alpha_{L3,z}')  
     
@@ -124,5 +124,5 @@ function plot_accelerations2( velocities,time_range )
         'a_y',...
         'a_z'...
     );
-    title('end-effector center of mass')
+    title('end-effector center of mass'); grid;
 end

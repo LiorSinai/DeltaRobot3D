@@ -30,19 +30,19 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % end_time = 3;
 
 % Singularity settings
-omega = 0.5*[1;0;0];
-delta_t = 0.01;
-delay_between_plots = delta_t;
-tolerance = 0.0001;
-end_time = 4;
-
-% Full cycle settings
-% L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
 % omega = 0.5*[1;0;0];
 % delta_t = 0.01;
 % delay_between_plots = delta_t;
 % tolerance = 0.0001;
-% end_time = 12.6;
+% end_time = 4;
+
+% Full cycle settings
+L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
+omega = 0.5*[1;0;0];
+delta_t = 0.01;
+delay_between_plots = delta_t;
+tolerance = 0.0001;
+end_time = round(2*pi/0.5,abs(log10(delta_t))); %2
 
 % latent variables
 if calculate == true

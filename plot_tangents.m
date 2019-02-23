@@ -72,7 +72,7 @@ function plot_tangents(velocities, accelerations,time_range)
     u=Pv./vecnorm(Pv); % unit vector in the tangential direction
     Pa_tan=sum(u.*Pa); % dot product
     
-    figure('Name','Velocities and tangential accelerations');
+    figure('Name','Tangential velocity and accelerations');
 
     subplot(3,2,1)
     hold on
@@ -134,7 +134,7 @@ function plot_tangents(velocities, accelerations,time_range)
     title('Lower arm 3');
     grid;
     
-    figure('Name','Velocities and tangential accelerations');
+    figure('Name','Tangential velocity and accelerations cont.');
     hold on
     plot(time_range,vecnorm(Pv));
     plot(time_range,Pa_tan);
