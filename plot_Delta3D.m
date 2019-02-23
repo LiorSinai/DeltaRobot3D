@@ -161,6 +161,11 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_sym,thetaA,R_L1,R_L2,R_L3,thetaA_t,t
         ylabel('y');
         zlabel('z');
         grid;
+        
+       
+        temptext=text(0,0,zmax*0.4,'Press any key to continue');
+        pause;
+        delete(temptext);
         else
         % Keep labels, title, orientation, axes, etc
         % Update only values
