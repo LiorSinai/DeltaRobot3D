@@ -1,5 +1,5 @@
 \section{Maths for 3D motion}
-
+\subsection{Definitions}
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figures/Initial_3D.png}                                                              
@@ -61,7 +61,7 @@ Constraint equations for the position
     \Phi=
     \begin{bmatrix}
     \begin{array}{l} % for proper alignment
-    M+R_{A,j}\begin{bmatrix}\frac{D}{2} \\ 0 \\0 \end{bmatrix} - U_j - R_{U,j} \begin{bmatrix}0\\ 0 \\\frac{L_u}{2}  \end{bmatrix}  \vspace{0.5em}\\
+    M+R_{A,j}\begin{bmatrix}\frac{L_b}{2} \\ 0 \\0 \end{bmatrix} - U_j - R_{U,j} \begin{bmatrix}0\\ 0 \\\frac{L_u}{2}  \end{bmatrix}  \vspace{0.5em}\\
    %\\
     U_j+R_{U,j}\begin{bmatrix}0 \\ 0 \\-\frac{L_u}{2} \end{bmatrix} - L_j - R_{L,j} \begin{bmatrix}0\\ 0 \\\frac{L_l}{2}  \end{bmatrix}  \vspace{0.5em}\\
     %\\
@@ -72,7 +72,7 @@ Constraint equations for the position
     %\vdots \\
     \vdots
     %\vdots
-    \end{bmatrix},\; j=1,2,3
+    \end{bmatrix},\; j=1,2,3 \label{eq:Phi3D}
 \end{equation}
 
 \begin{equation}
@@ -87,14 +87,14 @@ Constraint equations for the position
     \end{bmatrix}
 \end{equation}
 
-Kinematics
+\subsection{Kinematics}
 The following is true for all rotation matrices:
 \begin{align}
 RR^T&=I \\
 \implies \dot{R}R^T+R\dot{R^T}&=0 \nonumber\\
 \therefore \dot{R}R^T&=-R\dot{R^T}=\tilde{\omega} \label{eq:omega}
 \end{align}
-Written with reference frame subscripts:
+Written with reference frame superscripts and subscripts:
 \begin{align}
        \dot{R}^O_C &=\tilde{\omega}^O R^O_C \label{eq:Rdot} \\
              &= R^O_C \tilde{\omega}^C \label{eq:Rdot2}
@@ -104,19 +104,19 @@ The velocity and acceleration for a point on a rigid body is then:
 \begin{align}
 r_P^{O,O}&=r_C^{O,O}+R^O_C r_P^{C,C} \\
 \implies v_P^{O,O}&=v_C^{O,O}+\dot{R}^O_C r_P^{C,C} \nonumber\\
-                 &=v_C^{O,O}+\tilde{\omega}^{O,O}_C R^O_C r_P^{C,C}  \\
+                 &=v_C^{O,O}+\tilde{\omega}^{O,O}_C R^O_C r_P^{C,C}  \label{eq:Vel3D}\\
 \implies a_P^{O,O}&=a_C^{O,O}+\tilde{\alpha}^{O,O}_C R^O_C r_P^{C,C} + \tilde{\omega}^{O,O}_C \dot{R}^O_C r_P^{C,C} \nonumber \\
-                  &=a_C^{O,O}+\tilde{\alpha}^{O,O}_C R^O_C r_P^{C,C} + \tilde{\omega}^{O,O}_C \tilde{\omega}^{O,O}_C R^O_C r_P^{C,C}
+                  &=a_C^{O,O}+\tilde{\alpha}^{O,O}_C R^O_C r_P^{C,C} + \tilde{\omega}^{O,O}_C \tilde{\omega}^{O,O}_C R^O_C r_P^{C,C} \label{eq:Acc3D}
 \end{align}
 
-In order to compare the above equations with  equation \ref{eq:PhiDot} and \ref{eq:Gamma}, the following identity is used:
+The following identity is useful:
 \begin{align*}
 \tilde{\omega}^O R^O_C r^C &= \tilde{\omega}^O r^O \\
                            &= (\tilde{r}^O)^T \omega^O   &&\text{property of anti-symmetric matrices} \\
-                           &= R^O_C (\tilde{r}^C)^T R_C^O \omega^O &&\text{equations \ref{eq:Rdot} and \ref{eq:Rdot2}}
+                           &= R^O_C (\tilde{r}^C)^T R_C^O \omega^O &&\text{equations \ref{eq:Rdot} and \ref{eq:Rdot2}} 
 \end{align*}
 
-This results in:
+$\tfrac{d\Phi}{dt}$ can be found using equations \ref{eq:Vel3D} and \ref{eq:Acc3D} and can then be compared with equations \ref{eq:PhiDot} and \ref{eq:Gamma}:
 \begin{equation}
 \begin{split}
     \frac{d\Phi}{dt}&=
@@ -188,22 +188,22 @@ I & 0 & -R_{U,j}{\tilde r}^{U,U}_A R_{U,j}^T & 0 & 0 & ... \\
 \end{equation}
 
 
-
-Inverse kinematics
+\subsection{Inverse kinematics}
+Add the first 3 rows in equation \ref{eq:Phi3D}:
 \begin{equation}
     \begin{aligned}
-    r&= R_{L,j}\begin{bmatrix}0\\0\\L_l \end{bmatrix} = R_{A,j}\begin{bmatrix}\frac{D-L_e}{2}\\0\\0 \end{bmatrix} - R_{U,j}\begin{bmatrix}0\\0\\L_u  \end{bmatrix} - P  \\
+    r&= R_{L,j}\begin{bmatrix}0\\0\\L_l \end{bmatrix} = R_{A,j}\begin{bmatrix}\frac{L_b-L_e}{2}\\0\\0 \end{bmatrix} - R_{U,j}\begin{bmatrix}0\\0\\L_u  \end{bmatrix} - P  \\
 \therefore    r^Tr&=r^TR^TRr &
     \end{aligned}
 \end{equation}
 \begin{equation}
 %\begin{aligned}
-%        \left(\left(\frac{D-L_e}{2}-L_u sin(\theta_{a,j})\right)cos(\psi_0)-P_x\right)^2 &+ \\
-%        \left(\left(\frac{D-L_e}{2}-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2 &+\\
+%        \left(\left(\frac{L_b-L_e}{2}-L_u sin(\theta_{a,j})\right)cos(\psi_0)-P_x\right)^2 &+ \\
+%        \left(\left(\frac{L_b-L_e}{2}-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2 &+\\
 %        (-L_ucos(\theta_{a,j})-P_z)^2 &= L_l^2
 %\end{aligned}
 \begin{split}
-\implies L_l^2 =&\left(\left(\tfrac{1}{2}(D-L_e)-L_u sin(\theta_{a,j})\right)cos(\psi_0) -P_x\right)^2+ \\       &\left(\left(\tfrac{1}{2}(D-L_e)-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2+(-L_ucos(\theta_{a,j})-P_z)^2
+\implies L_l^2 =&\left(\left(\tfrac{1}{2}(L_b-L_e)-L_u sin(\theta_{a,j})\right)cos(\psi_0) -P_x\right)^2+ \\       &\left(\left(\tfrac{1}{2}(L_b-L_e)-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2+(-L_ucos(\theta_{a,j})-P_z)^2
 \end{split}
 \end{equation}
 % \begin{equation}
@@ -214,9 +214,12 @@ Inverse kinematics
 %     \end{bmatrix}
 % \end{equation}
 
+This means the 2D equations \ref{eq:gammaIK} can be used:
 \begin{equation}
 \begin{aligned}
-\tfrac{d^2q_a}{dt^2}&=-\Phi_{q_a}^{-1} (\Phi_{q_aq_a}\tfrac{dq_a}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_aP}\tfrac{dq_a}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt^2}) 
+\tfrac{d^2q_a}{dt^2}&=-\Phi_{q_a}^{-1}([\Phi_{q_a}\tfrac{dq_a}{dt}]_{q_a}\tfrac{dq_a}{dt}+[\Phi_{P}\tfrac{dP}{dt}]_{P}\tfrac{dP}{dt}+2[\Phi_{q_a}\tfrac{dq_a}{dt}]_{P}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt^2})\\
+&=-\Phi_{q_a}^{-1} (\Phi_{q_aq_a}\tfrac{dq_a}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_aP}\tfrac{dq_a}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt^2}) \\
+&=\hphantom{-}\Phi_{q_a}^{-1}\gamma^{IK}
 \end{aligned}
 \end{equation}
 
@@ -227,3 +230,5 @@ Inverse kinematics
 %   \hat{M}&=M_{ii}+ J^T M_{dd}J\\
 %   \hat{Q}&=-J^T Q_{A,d}+J^T M_{dd}\Phi_{q_d}^{-1}\gamma
 % \end{align}
+
+References: \cite{Schilder2018} \cite{Hibbeler2013}

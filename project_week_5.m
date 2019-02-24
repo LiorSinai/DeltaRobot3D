@@ -3,8 +3,8 @@ timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
 
 % Control settings parameters
-calculate = false;
-plotBoolean = false;
+calculate = true;
+plotBoolean = true;
 
 % plot settings parameters
 plot_positionBoolean = true;
@@ -22,7 +22,7 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % end_time = 2;
 
 % Twist settings
-omega = 0.5*[1;0.1;1];
+omega = 0.5*[1;0.5;1];
 delta_t = 0.01;
 delay_between_plots = delta_t;
 tolerance = 0.00001;
@@ -373,6 +373,22 @@ Q_A(30)=-m_u*g;
 Q_A(36)=-m_l*g;
 Q_A(42)=-m_p*g;
 
+if calculate==true
+    tic
+    run project_week_5_forces.m;
+    toc
+end
+%save(sprintf('TestRun_%s',timestamp)); % save all variables
+
+%% Run tests
+if calculate==true
+    fprintf('Starting tests ...')
+    tic
+    run test_forces.m;
+    %run test_embedded.m
+    toc
+end
+
 %% PID Controller
 emax=0.1; % m = 0.1mm. maximum error
 cycleTime = 0.35; %s for 1 kg
@@ -402,6 +418,5 @@ tz=1/(wc*sqrt(alpha));
 tp=alpha*tz;
 ti=beta*tz;
 
-%save(sprintf('TestRun_%s',timestamp)); % save all variables
 
 

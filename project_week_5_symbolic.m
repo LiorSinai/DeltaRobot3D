@@ -374,14 +374,50 @@ Q_Ai(7:9)=-C_U3;
 % Mhat = Mii - Mid*J - J.'*(Mdi - Mdd*J); 
 %Qhat = QA_i-Mid*P2- P.'*[QAd - Mdd*P2];
 
+%% Inverse Kinematics
+Phi_IK=[
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA1))*cos(thetaU1_z_0)-P_x)^2+...
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA1))*sin(thetaU1_z_0)-P_y)^2+...
+    (-L_u*cos(thetaA1)-P_z)^2-L_l^2;
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA2))*cos(thetaU2_z_0)-P_x)^2+...
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA2))*sin(thetaU2_z_0)-P_y)^2+...
+    (-L_u*cos(thetaA2)-P_z)^2-L_l^2;
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA3))*cos(thetaU3_z_0)-P_x)^2+...
+    ((0.5*(L_b-L_e)-L_u*sin(thetaA3))*sin(thetaU3_z_0)-P_y)^2+...
+    (-L_u*cos(thetaA3)-P_z)^2-L_l^2
+    ];
+Jacobian_P=jacobian(Phi_IK,[P_x P_y P_z]);
+Jacobian_qa=jacobian(Phi_IK,[thetaA1 thetaA2 thetaA3]);
 
-
+syms Pvel_x Pvel_y Pvel_z omegaA1 omegaA2 omegaA3
+syms Pacc_x Pacc_y Pacc_z
+Pvel=[Pvel_x Pvel_y Pvel_z].';
+Pacc=[Pacc_x Pacc_y Pacc_z].';
+omegaA=[omegaA1 omegaA2 omegaA3].';
+% The following terms are equal to Jacobian*Qvel, not just the Jacobian
+Jacobian_PP=jacobian(Jacobian_P*Pvel,[P_x;P_y;P_z])*Pvel;
+Jacobian_qaqa=jacobian(Jacobian_qa*omegaA,[thetaA1;thetaA2;thetaA3])*omegaA;
+J_cross=jacobian(Jacobian_qa*omegaA,[P_x;P_y;P_z])*Pvel;
+%J_cross=jacobian(Jacobian_P*Pvel,[thetaA1;thetaA2;thetaA3])*omegaA
+%J_cross2=sym(zeros(3,3));
+% J_cross2(:,1)=jacobian(Jacobian_qa(:,1),[P_x;P_y;P_z])*Pvel;
+% J_cross2(:,2)=jacobian(Jacobian_qa(:,2),[P_x;P_y;P_z])*Pvel;
+% J_cross2(:,3)=jacobian(Jacobian_qa(:,3),[P_x;P_y;P_z])*Pvel;
+% J_cross2=J_cross2*omegaA;
+% J_cross2(:,1)=jacobian(Jacobian_P(:,1),[thetaA1;thetaA2;thetaA3])*omegaA;
+% J_cross2(:,2)=jacobian(Jacobian_P(:,2),[thetaA1;thetaA2;thetaA3])*omegaA;
+% J_cross2(:,3)=jacobian(Jacobian_P(:,3),[thetaA1;thetaA2;thetaA3])*omegaA;
+% J_cross2=J_cross2*Pvel;
+% simplify(J_cross2-J_cross)
+Gamma_IK=-(Jacobian_qaqa+Jacobian_PP+2*J_cross+Jacobian_P*Pacc);
 %% Convert the functions to a numeric format
 %Mfile=matlabFunction(Mhat,'File','MhatNumeric');
 %Qfile=matlabFunction(Qhat,'File','QhatNumeric');
 %Jacobian_file=matlabFunction(Jacobian,'File','Jacobian_Numeric');
 %Jacobian_dfile=matlabFunction(Jacobian_d,'File','Jacobian_dNumeric');
 %Jacobian_ifile=matlabFunction(Jacobian_i,'File','Jacobian_iNumeric');
+%Jacobian_Pfile=matlabFunction(Jacobian_P,'File','Jacobian_PNumeric');
+%Jacobian_qafile=matlabFunction(Jacobian_qa,'File','Jacobian_qaNumeric');
 %GammaFile= matlabFunction(Gamma,'File','GammaNumeric');
 %GammaFile_without_driving= matlabFunction(Gamma_without_driving,'File','Gamma_without_drivingNumeric');
-%Gamma_QiPFile= matlabFunction(Gamma_QiP,'File','Gamma_QiPNumeric');
+%Gamma_IKFile= matlabFunction(Gamma_IK,'File','Gamma_IKNumeric');

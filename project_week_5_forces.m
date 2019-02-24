@@ -6,9 +6,9 @@
 % tic
 % [lambda, Q_AC]=calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Qacc,R1,R2,R3,Qvel,thetaA_t,time_range,M_C,I_C,Q_A);
 % toc
-tic
+%tic
 [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R1,R2,R3,Qvel,thetaA_t,time_range,L,M_C,I_C,Q_A);
-toc
+%toc
 
 Nvalid=size(thetaA_t,2); % number of valid points
 time_valid=time_range(1:Nvalid); % if a singularity was hit, the valid_time

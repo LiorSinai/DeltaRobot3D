@@ -1,5 +1,5 @@
 \section{Maths for 2D motion}
-
+\subsection{Definitions}
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figures/Initial_2D.png}                                                              
@@ -12,7 +12,7 @@ Constraint equations
     \Phi=
     \begin{bmatrix}
     \begin{array}{l} % for proper alignment
-    M_x\mp\frac{D}{2}-U_{j,x}-\frac{L_u}{2} cos(\theta_{U,j}) \\
+    M_x\mp\frac{L_b}{2}-U_{j,x}-\frac{L_u}{2} cos(\theta_{U,j}) \\
     M_y-U_{j,y}-\frac{L_u}{2} sin(\theta_{U,j})\\
     U_{j,x}-\frac{L_u}{2}cos(\theta_{U,j})-L_{j,x}-\frac{L_l}{2}cos(\theta_{L,j}) \\
     U_{j,y}-\frac{L_u}{2}sin(\theta_{U,j})-L_{j,x}-\frac{L_l}{2}sin(\theta_{L,j})\\
@@ -46,7 +46,7 @@ Independent and Dependent Co-ordinates
     \end{bmatrix}
 \end{align}
 
-Kinematics
+\subsection{Kinematics}
 \begin{align}
             \Phi &= 0  \nonumber \\
 \implies \tfrac{d\Phi}{dt} &=\Phi_q \tfrac{dq}{dt}+ \Phi_t =0 \label{eq:PhiDot} \\
@@ -56,20 +56,20 @@ Kinematics
                     &=\Phi_q^{-1} \gamma \label{eq:Gamma}
 \end{align}
 
-Embedded form:
-\begin{align}
-         J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
- \dot{q}_d&=-J\dot{q}_i\\
-   \hat{M}&=M_{ii}+ J^T M_{dd}J\\
-   \hat{Q}&=-J^T Q_{A,d}+J^T M_{dd}\Phi_{q_d}^{-1}\gamma
-\end{align}
+%%Embedded form:
+%\begin{align}
+%         J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
+% \dot{q}_d&=-J\dot{q}_i\\
+%   \hat{M}&=M_{ii}+ J^T M_{dd}J\\
+%   \hat{Q}&=-J^T Q_{A,d}+J^T M_{dd}\Phi_{q_d}^{-1}\gamma
+%\end{align}
 
-Inverse Kinematics
+\subsection{Inverse Kinematics}
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figures/Inverse_2D.png}                                                              
-	\caption[Interpretation of the inverse kinematics equation]{Interpretation of the inverse kinematics equation. The circles are centered at $x=\mp\tfrac{1}{2}D-L_u cos(\theta_{U,j})\pm\tfrac{1}{2}L_e$  and $y=-L_u sin(\theta_{U,j})$}
+	\caption[Interpretation of the inverse kinematics equation]{Interpretation of the inverse kinematics equation. The circles are centered at $x=\mp\tfrac{1}{2}L_b-L_u cos(\theta_{U,j})\pm\tfrac{1}{2}L_e$  and $y=-L_u sin(\theta_{U,j})$}
 	\label{fig:inverse2D}
 \end{figure}
 
@@ -77,23 +77,21 @@ Inverse Kinematics
 \begin{equation}
     \Phi^{IK}=
     \begin{bmatrix}
-     (\mp \frac{D}{2}-L_u cos(\theta_{U,j})\pm\frac{L_e}{2}-P_x)^2+(-P_y-L_u sin(\theta_{U,j}))^2-L_l^2 \\
+     (\mp \frac{L_b}{2}-L_u cos(\theta_{U,j})\pm\frac{L_e}{2}-P_x)^2+(-P_y-L_u sin(\theta_{U,j}))^2-L_l^2 \\
          \vdots
     \end{bmatrix}
 \end{equation}
 
 \begin{align}
-\Phi^{IK} &= 0  \nonumber \\
-\implies \tfrac{d\Phi}{dt} &=\Phi_{q_i} \tfrac{dq_i}{dt}+\Phi_{P} \tfrac{dP}{dt}  =0\\
-\begin{split}
+\Phi^{IK} =& 0  \nonumber \\
+\implies \tfrac{d\Phi}{dt} =&\Phi_{q_i} \tfrac{dq_i}{dt}+\Phi_{P} \tfrac{dP}{dt}  =0\\
 \implies 
-\tfrac{d^2\Phi}{dt^2} =&([\Phi_{q_i}\tfrac{dq_i}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{q_i}\tfrac{dq_i}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{q_i}\tfrac{d^2q_i}{dt^2}+\\
-                           &([\Phi_{P}\tfrac{dP}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{P}\tfrac{dP}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{P}\tfrac{d^2P}{dt^2}=0
-\end{split}\\
-\therefore  \tfrac{d^2q_i}{dt^2}&=-\Phi_{q_i}^{-1} (\Phi_{q_iq_i}\tfrac{dq_i}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_iP}\tfrac{dq_i}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt}) 
+\tfrac{d^2\Phi}{dt^2} =&([\Phi_{q_i}\tfrac{dq_i}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{q_i}\tfrac{dq_i}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{q_i}\tfrac{d^2q_i}{dt^2}+ \nonumber\\
+                           &([\Phi_{P}\tfrac{dP}{dt}]_{q_i}\tfrac{dq_i}{dt}+[\Phi_{P}\tfrac{dP}{dt}]_{P}\tfrac{dP}{dt})+\Phi_{P}\tfrac{d^2P}{dt^2}\hphantom{+}=0\\
+\therefore  \tfrac{d^2q_i}{dt^2}=&-\Phi_{q_i}^{-1} (\Phi_{q_iq_i}\tfrac{dq_i}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_iP}\tfrac{dq_i}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt}) \label{eq:gammaIK}
 \end{align}
 
-
+References: \cite{Schilder2018} \cite{Hibbeler2013}
 % \begin{align}
 %     M_{ii}=
 %     \begin{bmatrix}
