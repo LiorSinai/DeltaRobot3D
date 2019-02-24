@@ -3,8 +3,8 @@ timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
 
 % Control settings parameters
-calculate = false;
-plotBoolean = false;
+calculate = true;
+plotBoolean = true;
 
 % plot settings parameters
 plot_positionBoolean = true;
@@ -17,36 +17,47 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % Push down settings
 % omega = 0.5*[1;1;1];
 % delta_t = 0.1;
-% delay_between_plots = delta_t;
-% tolerance = 0.0001;
 % end_time = 2;
 
 % Twist settings
-omega = 0.5*[1;0.5;1];
-delta_t = 0.01;
-delay_between_plots = delta_t;
-tolerance = 0.00001;
-end_time = 3;
+% omega = 0.5*[1;0.5;1];
+% delta_t = 0.01;
+% end_time = 3;
 
 % Singularity settings
 % omega = 0.5*[1;0;0];
 % delta_t = 0.01;
-% delay_between_plots = delta_t;
-% tolerance = 0.0001;
 % end_time = 4;
 
 % Full cycle settings
 % L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
 % omega = 0.5*[1;0;0];
 % delta_t = 0.01;
-% delay_between_plots = delta_t;
-% tolerance = 0.0001;
-% end_time = round(2*pi/0.5,abs(log10(delta_t))); %2
+% end_time = round(2*pi/0.5,abs(log10(delta_t))); 
 
-% latent variables
+% define the driving constraint functions
+%constant velocity
+% func.thetaA1=@(t)omega(1)*t ;
+% func.thetaA2=@(t)omega(2)*t;
+% func.thetaA3=@(t)omega(3)*t;
+%constant acceleration
+%alphaA=0.1*[1 1 2]';
+% func.thetaA1=@(t)0.5*alphaA(1)*t^2;
+% func.thetaA2=@(t)0.5*alphaA(2)*t^2;
+% func.thetaA3=@(t)0.5*alphaA(3)*t^2;
+% harmonic
+delta_t = 0.1;
+end_time=6;
+func.thetaA1=@(t)(+30*pi/180)*sin(t);
+func.thetaA2=@(t)(-20*pi/180)*sin(t);
+func.thetaA3=@(t)(+45*pi/180)*sin(t);
+
+% common variables for calculation
 if calculate == true
     time_range = 0:delta_t:end_time;
     Q = zeros(42,length(time_range));
+    delay_between_plots = delta_t;
+    tolerance = 0.0001;
 end
 
 %% symbolic variables used
@@ -188,7 +199,7 @@ R_L0(:,:,2)=R_L2_0;
 R_L0(:,:,3)=R_L3_0;
 
 thetaA_sym=[thetaA1 ; thetaA2 ; thetaA3];
-thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0]; % TODO: do these always have to be the same? If yes, then can remove this variable
+thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0];
 
 plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0 )
 
@@ -204,24 +215,24 @@ Phi= [...
     % Therefore phi_0=thetaU1_x_0=0
     %     omega_U = R_U1*[0;omega_U;0]
     % so: theta_U = integral(R_U1*[0;omega_U;0])
-    thetaU1_x - R_U1(1,2)*omega(1)*t_sym - 0; %thetaU1_x_0=0
-    thetaU1_y - R_U1(2,2)*omega(1)*t_sym - thetaU1_y_0;% driving constraint
+    thetaU1_x - R_U1(1,2)*func.thetaA1(t_sym) - 0; %thetaU1_x_0=0
+    thetaU1_y - R_U1(2,2)*func.thetaA1(t_sym) - thetaU1_y_0;% driving constraint
     thetaU1_z - 0 - thetaU1_z_0; % note: R(3,2)=0 if phi_0=thetaU1_x_0=0
     ... # Arm 2:  3x3 = 9 constraints
     [M_x;M_y;M_z] + R_A2*[L(4)/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L(1)/2];
     [U2_x; U2_y; U2_z] + R_U2*[0;0;-L(1)/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L(2)/2];
     [L2_x; L2_y; L2_z] + R_L2*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A2*[L(3)/2;0 ;0];
     ... # upper angles: 3 constraints
-    thetaU2_x - R_U2(1,2)*omega(2)*t_sym - 0; %thetaU2_x_0=0
-    thetaU2_y - R_U2(2,2)*omega(2)*t_sym - thetaU2_y_0;% driving constraint
+    thetaU2_x - R_U2(1,2)*func.thetaA2(t_sym) - 0; %thetaU2_x_0=0
+    thetaU2_y - R_U2(2,2)*func.thetaA2(t_sym) - thetaU2_y_0;% driving constraint
     thetaU2_z - 0 - thetaU2_z_0; % note: this variable is not used    
     ... # Arm 3:  3x3 = 9 constraints
     [M_x;M_y;M_z] + R_A3*[L(4)/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L(1)/2];
     [U3_x; U3_y; U3_z] + R_U3*[0;0;-L(1)/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L(2)/2];
     [L3_x; L3_y; L3_z] + R_L3*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A3*[L(3)/2;0 ;0];
     ... # upper angles: 3 constraints
-    thetaU3_x - R_U3(1,2)*omega(3)*t_sym - 0 ; %thetaU3_x_0=0
-    thetaU3_y - R_U3(2,2)*omega(3)*t_sym - thetaU3_y_0;% driving constraint
+    thetaU3_x - R_U3(1,2)*func.thetaA3(t_sym) - 0 ; %thetaU3_x_0=0
+    thetaU3_y - R_U3(2,2)*func.thetaA3(t_sym) - thetaU3_y_0;% driving constraint
     thetaU3_z - 0 - thetaU3_z_0; % note: this variable is not used    
         ... # Fixed variables:  3 constraints
     [M_x;M_y;M_z];
@@ -308,9 +319,8 @@ if calculate == true
 %     Qvel = calculate_velocity(Velocity,Q_sym,R_sym,thetaA_sym,t_sym,Q,R1,R2,R3,thetaA_t,time_range);    
 %     QaccOld = calculate_acceleration(Jacobian,Phi_tt,Q_sym,R_sym,thetaA_sym,t_sym,Q,R1,R2,R3,Qvel,thetaA_t,time_range,L);
 %     toc
-
     tic
-    [Q,R1,R2,R3,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,omega,L);
+    [Q,R1,R2,R3,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,func,L);
     Qvel = calculate_velocity_fast(Phi_t,t_sym,R1,R2,R3,thetaA_t,time_range,L);
     Qacc=calculate_acceleration_fast(Phi_tt,t_sym,R1,R2,R3,Qvel,thetaA_t,time_range,L);
     toc

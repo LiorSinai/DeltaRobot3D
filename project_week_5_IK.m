@@ -34,9 +34,19 @@ plot(time_valid,qa_t-thetaA_t,'x-')
 title('Error in \theta_A')
 
 figure;
-plot(time_valid,qaVel_t-omega,'x-')
+%plot(time_valid,qaVel_t-alphaA*time_range,'x-') % constant acceleratio
+%plot(time_valid,qaVel_t-omega,'x-') % constant velocity
+vHarmonic=[(+30*pi/180)*cos(time_valid);
+           (-20*pi/180)*cos(time_valid);
+           (+45*pi/180)*cos(time_valid)];
+plot(time_valid,qaVel_t-vHarmonic)
 title('Error in \omega_A')
 
 figure;
-plot(time_valid,qaAcc_t,'x-')
+%plot(time_valid,qaAcc_t-alphaA,'x-') % cosntant acceleration
+%plot(time_valid,qaAcc_t-0,'x-') % constant velocity
+aHarmonic=[-(+30*pi/180)*sin(time_valid);
+           -(-20*pi/180)*sin(time_valid);
+           -(+45*pi/180)*sin(time_valid)];
+plot(time_valid,qaAcc_t-aHarmonic)
 title('Error in \alpha_A')

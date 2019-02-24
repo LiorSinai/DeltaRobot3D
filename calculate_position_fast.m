@@ -1,4 +1,4 @@
-function [Q,R1_out,R2_out,R3_out,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,omega,L)
+function [Q,R1_out,R2_out,R3_out,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,func,L)
 % fast calulation for the position
 % does not use the Symbloic toolbox (but that is used to make the Jacobian function)
 % This less general than the normal code, as it uses a pre-defined system matrix
@@ -97,24 +97,24 @@ for k = 1:N
         [U1_x; U1_y; U1_z] + R_U1*[0;0;-L(1)/2] - [L1_x; L1_y; L1_z] - R_L1*[0;0;L(2)/2];
         [L1_x; L1_y; L1_z] + R_L1*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A1*[L(3)/2;0 ;0];
         ... # upper angles: 3 constraints
-        thetaU1_x - R_U1(1,2)*omega(1)*t_sym - 0; %thetaU1_x_0=0
-        thetaU1_y - R_U1(2,2)*omega(1)*t_sym - thetaU1_y_0;% driving constraint
+        thetaU1_x - R_U1(1,2)*func.thetaA1(t_sym) - 0; %thetaU1_x_0=0
+        thetaU1_y - R_U1(2,2)*func.thetaA1(t_sym) - thetaU1_y_0;% driving constraint
         thetaU1_z - 0 - thetaU1_z_0; % note: R(3,2)=0 if phi_0=thetaU1_x_0=0
         ... # Arm 2:  3x3 = 9 constraints
         [M_x;M_y;M_z] + R_A2*[L(4)/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L(1)/2];
         [U2_x; U2_y; U2_z] + R_U2*[0;0;-L(1)/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L(2)/2];
         [L2_x; L2_y; L2_z] + R_L2*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A2*[L(3)/2;0 ;0];
         ... # upper angles: 3 constraints
-        thetaU2_x - R_U2(1,2)*omega(2)*t_sym - 0;  
-        thetaU2_y - R_U2(2,2)*omega(2)*t_sym - thetaU2_y_0;% driving constraint
+        thetaU2_x - R_U2(1,2)*func.thetaA2(t_sym) - 0;  
+        thetaU2_y - R_U2(2,2)*func.thetaA2(t_sym) - thetaU2_y_0;% driving constraint
         thetaU2_z - 0 - thetaU2_z_0; % note: this variable is not used    
         ... # Arm 3:  3x3 = 9 constraints
         [M_x;M_y;M_z] + R_A3*[L(4)/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L(1)/2];
         [U3_x; U3_y; U3_z] + R_U3*[0;0;-L(1)/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L(2)/2];
         [L3_x; L3_y; L3_z] + R_L3*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A3*[L(3)/2;0 ;0];
         ... # upper angles: 3 constraints
-        thetaU3_x - R_U3(1,2)*omega(3)*t_sym - 0  ;
-        thetaU3_y - R_U3(2,2)*omega(3)*t_sym - thetaU3_y_0;% driving constraint
+        thetaU3_x - R_U3(1,2)*func.thetaA3(t_sym) - 0  ;
+        thetaU3_y - R_U3(2,2)*func.thetaA3(t_sym) - thetaU3_y_0;% driving constraint
         thetaU3_z - 0 - thetaU3_z_0; % note: this variable is not used    
             ... # Fixed variables:  3 constraints
         [M_x;M_y;M_z];
