@@ -3,8 +3,8 @@ timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
 
 % Control settings parameters
-calculate = true;
-plotBoolean = true;
+calculate = false;
+plotBoolean = false;
 
 % plot settings parameters
 plot_positionBoolean = true;
@@ -392,14 +392,15 @@ end
 %% PID Controller
 emax=0.1; % m = 0.1mm. maximum error
 cycleTime = 0.35; %s for 1 kg
-startDistance=0.025; %m
-endDistance=0.305; %m
-cycleDistance=endDistance-startDistance; %m
-cycleAngle=atan2(cycleDistance,L(1)+L(2)); %=0.21*pi~pi/4
+% startDistance=0.025; %m
+% endDistance=0.305; %m
+% cycleDistance=endDistance-startDistance; %m
+% cycleAngle=atan2(cycleDistance,L(1)+L(2)); %=0.21*pi~pi/4
 
 % reference constants
-%hm=45*pi/180; % required angle
-hm=thetaA_0(1)*0.5;
+hm=45*pi/180; % required angle
+%hm=thetaA_0(1)*0.5;
+% hm=cycleAngle/2;
 tm=cycleTime; % required time to reach hm
 h0=thetaA_0(1);
 

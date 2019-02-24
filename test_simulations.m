@@ -25,7 +25,9 @@ Qacc_sim(ind_i,:)=Qi_acc_SIM.Data';
 
 t_sim = Qi_SIM.Time;
 thetaA_sim = thetaA_SIM.Data';
-tau_sim=tau_fb_SIM.Data';
+%tau_sim=tau_fb_SIM.Data'; 
+tau_sim=tau_a_SIM.Data';
+%tau_sim=zeros(size(tau_a_SIM.Data'));
 
 R_L1_sim=zeros(3,3,N);
 R_L2_sim=R_L1_sim;
@@ -168,4 +170,28 @@ title('Error residues for moments')
 
 %save(sprintf('TestRun_%s',timestamp)); % save all variables
 
-
+%% Test inverse kinematics
+% qa_t=zeros(size(thetaA_sim));
+% qaVel_t=qa_t;
+% qaAcc_t=qa_t;
+% for testIndex=1:N
+%     qa0=thetaA_sim(:,testIndex);
+%     [qa, qaVel, qaAcc]=calculate_IK(L,qa0,Q_sim(indP,testIndex),...
+%         Qvel_sim(indP,testIndex),Qacc_sim(indP,testIndex),...
+%         tolerance);
+%     qa_t(:,testIndex)=qa;
+%     qaVel_t(:,testIndex)=qaVel;
+%     qaAcc_t(:,testIndex)=qaAcc;
+% end
+% 
+% figure;
+% plot(1:N,qa_t-thetaA_sim,'x-')
+% title('Error in \theta_A')
+% 
+% % figure;
+% % plot(1:N,qaVel_t-omega,'x-')
+% % title('Error in \omega_A')
+% 
+% figure;
+% plot(1:N,qaAcc_t,'x-')
+% title('Error in \alpha_A')

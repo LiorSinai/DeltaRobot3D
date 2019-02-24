@@ -397,19 +397,19 @@ omegaA=[omegaA1 omegaA2 omegaA3].';
 % The following terms are equal to Jacobian*Qvel, not just the Jacobian
 Jacobian_PP=jacobian(Jacobian_P*Pvel,[P_x;P_y;P_z])*Pvel;
 Jacobian_qaqa=jacobian(Jacobian_qa*omegaA,[thetaA1;thetaA2;thetaA3])*omegaA;
-J_cross=jacobian(Jacobian_qa*omegaA,[P_x;P_y;P_z])*Pvel;
+Jcross=jacobian(Jacobian_qa*omegaA,[P_x;P_y;P_z])*Pvel;
 %J_cross=jacobian(Jacobian_P*Pvel,[thetaA1;thetaA2;thetaA3])*omegaA
-%J_cross2=sym(zeros(3,3));
-% J_cross2(:,1)=jacobian(Jacobian_qa(:,1),[P_x;P_y;P_z])*Pvel;
-% J_cross2(:,2)=jacobian(Jacobian_qa(:,2),[P_x;P_y;P_z])*Pvel;
-% J_cross2(:,3)=jacobian(Jacobian_qa(:,3),[P_x;P_y;P_z])*Pvel;
-% J_cross2=J_cross2*omegaA;
-% J_cross2(:,1)=jacobian(Jacobian_P(:,1),[thetaA1;thetaA2;thetaA3])*omegaA;
-% J_cross2(:,2)=jacobian(Jacobian_P(:,2),[thetaA1;thetaA2;thetaA3])*omegaA;
-% J_cross2(:,3)=jacobian(Jacobian_P(:,3),[thetaA1;thetaA2;thetaA3])*omegaA;
-% J_cross2=J_cross2*Pvel;
-% simplify(J_cross2-J_cross)
-Gamma_IK=-(Jacobian_qaqa+Jacobian_PP+2*J_cross+Jacobian_P*Pacc);
+Jcross2=sym(zeros(3,3));
+Jcross2(:,1)=jacobian(Jacobian_qa(:,1),[P_x;P_y;P_z])*Pvel;
+Jcross2(:,2)=jacobian(Jacobian_qa(:,2),[P_x;P_y;P_z])*Pvel;
+Jcross2(:,3)=jacobian(Jacobian_qa(:,3),[P_x;P_y;P_z])*Pvel;
+Jcross2=Jcross2*omegaA;
+% Jcross2(:,1)=jacobian(Jacobian_P(:,1),[thetaA1;thetaA2;thetaA3])*omegaA;
+% Jcross2(:,2)=jacobian(Jacobian_P(:,2),[thetaA1;thetaA2;thetaA3])*omegaA;
+% Jcross2(:,3)=jacobian(Jacobian_P(:,3),[thetaA1;thetaA2;thetaA3])*omegaA;
+% Jcross2=Jcross2*Pvel;
+simplify(Jcross2-Jcross)
+Gamma_IK=-(Jacobian_qaqa+Jacobian_PP+2*Jcross+Jacobian_P*Pacc);
 %% Convert the functions to a numeric format
 %Mfile=matlabFunction(Mhat,'File','MhatNumeric');
 %Qfile=matlabFunction(Qhat,'File','QhatNumeric');

@@ -1,7 +1,7 @@
 %% Inverse Kinematics
 %Lior Sinai, 2019-02-24
 
-function [qa, qaVel, qaAcc]=calculate_IK(L,qa0,P,omegaA,Pvel,Pacc,tolerance)
+function [qa, qaVel, qaAcc]=calculate_IK(L,qa0,P,Pvel,Pacc,tolerance)
 % settings
 singularity=false;
 maxIteration=20;
@@ -14,9 +14,6 @@ L_b=L(4);
 P_x=P(1);P_y=P(2);P_z=P(3);
 Pvel_x=Pvel(1);Pvel_y=Pvel(2); Pvel_z=Pvel(3);
 Pacc_x=Pacc(1);Pacc_y=Pacc(2); Pacc_z=Pacc(3);
-omegaA1=omegaA(1);
-omegaA2=omegaA(2);
-omegaA3=omegaA(3);
 
 qa = zeros(3,1);
 qaAcc = zeros(3,1);
@@ -69,6 +66,9 @@ Jacobian_P=Jacobian_PNumeric(L_b,L_e,L_u,...
 qaVel=-Jacobian_qa\Jacobian_P*Pvel;
 
 %% Acceleration
+omegaA1=qaVel(1);
+omegaA2=qaVel(2);
+omegaA3=qaVel(3);
 gamma_IK = Gamma_IKNumeric(L_b,L_e,L_u,...
     P_x,P_y,P_z,...
     Pacc_x,Pacc_y,Pacc_z,...
