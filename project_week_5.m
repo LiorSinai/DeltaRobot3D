@@ -1,11 +1,10 @@
-
 clear
 timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
 
 % Control settings parameters
-calculate = true;
-plotBoolean = true;
+calculate = false;
+plotBoolean = false;
 
 % plot settings parameters
 plot_positionBoolean = true;
@@ -23,11 +22,11 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % end_time = 2;
 
 % Twist settings
-% omega = 0.5*[1;0.1;1];
-% delta_t = 0.01;
-% delay_between_plots = delta_t;
-% tolerance = 0.00001;
-% end_time = 3;
+omega = 0.5*[1;0.1;1];
+delta_t = 0.01;
+delay_between_plots = delta_t;
+tolerance = 0.00001;
+end_time = 3;
 
 % Singularity settings
 % omega = 0.5*[1;0;0];
@@ -37,12 +36,12 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % end_time = 4;
 
 % Full cycle settings
-L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
-omega = 0.5*[1;0;0];
-delta_t = 0.01;
-delay_between_plots = delta_t;
-tolerance = 0.0001;
-end_time = round(2*pi/0.5,abs(log10(delta_t))); %2
+% L = [1,1,0.8,0.8]; % L_upper, L_lower, L_effector, L_base
+% omega = 0.5*[1;0;0];
+% delta_t = 0.01;
+% delay_between_plots = delta_t;
+% tolerance = 0.0001;
+% end_time = round(2*pi/0.5,abs(log10(delta_t))); %2
 
 % latent variables
 if calculate == true
@@ -402,4 +401,7 @@ kc=M*wc^2*sqrt(alpha);
 tz=1/(wc*sqrt(alpha));
 tp=alpha*tz;
 ti=beta*tz;
+
+%save(sprintf('TestRun_%s',timestamp)); % save all variables
+
 

@@ -20,10 +20,7 @@ for timeStep=1:N
     R_L2_sim(:,:,timeStep)=R_L2_SIM.Data(:,:,timeStep);
     R_L3_sim(:,:,timeStep)=R_L3_SIM.Data(:,:,timeStep);
 end
-plot_Delta3D( Q_sim,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R_L1_sim,R_L2_sim,R_L3_sim,thetaA_sim,t_sim,0.2 )
 
-%% check simulations
-% vecnorm(Q_sim(7:8,:)-  [0;thetaU1_y_0])-abs(thetaA_sim(1,:)-thetaA_0(1))
-% vecnorm(Q_sim(19:20,:)-[0;thetaU2_y_0])-abs(thetaA_sim(2,:)-thetaA_0(2))
-% vecnorm(Q_sim(31:32,:)-[0;thetaU3_y_0])-abs(thetaA_sim(3,:)-thetaA_0(3))
+%% plot simulations
+plot_Delta3D( Q_sim,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R_L1_sim,R_L2_sim,R_L3_sim,thetaA_sim,t_sim,0.2 )
 
