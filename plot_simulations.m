@@ -22,5 +22,5 @@ for timeStep=1:N
 end
 
 %% plot simulations
-plot_Delta3D( Q_sim,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R_L1_sim,R_L2_sim,R_L3_sim,thetaA_sim,t_sim,0.2 )
+plot_Delta3D( Q_sim,L,R_A1,R_A2,R_A3,R_L1_sim,R_L2_sim,R_L3_sim,thetaA_sim,t_sim,0.2 )
 

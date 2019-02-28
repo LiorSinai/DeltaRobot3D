@@ -36,17 +36,22 @@ title('Error in \theta_A')
 figure;
 %plot(time_valid,qaVel_t-alphaA*time_range,'x-') % constant acceleratio
 %plot(time_valid,qaVel_t-omega,'x-') % constant velocity
-vHarmonic=[(+30*pi/180)*cos(time_valid);
-           (-20*pi/180)*cos(time_valid);
-           (+45*pi/180)*cos(time_valid)];
-plot(time_valid,qaVel_t-vHarmonic)
+% omegaDrive=[(+30*pi/180)*cos(time_valid);
+%            (-20*pi/180)*cos(time_valid);
+%            (+45*pi/180)*cos(time_valid)];
+thetaFunc=[driveFunc.thetaA1(t_sym); driveFunc.thetaA2(t_sym); driveFunc.thetaA3(t_sym)];
+omegaFunc=diff(thetaFunc,t_sym);
+omegaDrive=eval(subs(omegaFunc,t_sym,time_valid));
+plot(time_valid,qaVel_t-omegaDrive)
 title('Error in \omega_A')
 
 figure;
 %plot(time_valid,qaAcc_t-alphaA,'x-') % cosntant acceleration
 %plot(time_valid,qaAcc_t-0,'x-') % constant velocity
-aHarmonic=[-(+30*pi/180)*sin(time_valid);
-           -(-20*pi/180)*sin(time_valid);
-           -(+45*pi/180)*sin(time_valid)];
-plot(time_valid,qaAcc_t-aHarmonic)
+% alphaDrive=[-(+30*pi/180)*sin(time_valid);
+%            -(-20*pi/180)*sin(time_valid);
+%            -(+45*pi/180)*sin(time_valid)];
+alphaFunc=diff(omegaFunc,t_sym);
+alphaDrive=eval(subs(alphaFunc,t_sym,time_valid));
+plot(time_valid,qaAcc_t-alphaDrive)
 title('Error in \alpha_A')

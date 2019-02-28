@@ -91,6 +91,53 @@ Independent and Dependent Co-ordinates
 \therefore  \tfrac{d^2q_i}{dt^2}=&-\Phi_{q_i}^{-1} (\Phi_{q_iq_i}\tfrac{dq_i}{dt}^2+\Phi_{PP}\tfrac{dP}{dt}^2+2\Phi_{q_iP}\tfrac{dq_i}{dt}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt}) \label{eq:gammaIK}
 \end{align}
 
+\subsection{Kinetics}
+The Lagrange multiplier method has been used to calculate the forces. See \cite{Schilder2018} for more detail.\\
+
+The primary equation is:
+\begin{eqnarray}
+M\ddot{q}+\Phi_q^T\lambda=Q_A \label{eq:lambda}
+\end{eqnarray}
+Where $Q_A$ are the applied forces and $\lambda$ the Lagrange multipliers. The $\lambda$ can be solved for directly if $\Phi_q$ has full rank, which will be the case if it kinematically driven. Otherwise, $Phi_q$ will have more columns for co-ordinates $q$ than rows for constraint equations, and will not be invertible. They must then be solved for simultaneously with the accelerations:
+\begin{equation}
+\begin{bmatrix}
+M &\Phi_q^T \\
+\Phi_q &0
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{q} \\
+\lambda
+\end{bmatrix}
+=
+\begin{bmatrix}
+Q_a \\
+\gamma
+\end{bmatrix} \label{eq:EoM}
+\end{equation}
+See the appendix for more detail.\\
+
+Each $\lambda$ can be related to constraint forces at a particular point P from a centroid with co-ordinates $(X,Y,\Theta)$ with:
+\begin{equation}
+\begin{aligned}
+F_{P,x}&=-\Phi_{P,X}^T\lambda_P \\
+F_{P,y}&=-\Phi_{P,Y}^T\lambda_P \\
+M_P    &=-\Phi_{P,\Theta}^T\lambda_P+y_{P/Y}-F_{P,x}-x_{P/X}F_{P,y}
+\end{aligned}
+\end{equation}
+Where $\Phi_{P,\Theta}$ is the Jacobian of the relevant constraints at P with respect to $(X,Y,\Theta)$. Equivalently, it is the sub-matrix of $\Phi_q$ with the same indices as the relevant constraint equations and co-ordinates.\\
+
+The constraint forces can also be found by solving:
+\begin{equation}
+\begin{aligned}
+m_u \ddot{x}_u &= F_{A,x}+F_{B,x} \\ 
+m_u \ddot{y}_u &= F_{A,y}+F_{B,y} -m_u g \\
+I_u \ddot{\theta_u}&=-(F_{B,x}-F_{A,x})\tfrac{1}{2}L_usin(\theta_U)+(F_{B,y}-F_{A,y})\tfrac{1}{2}L_ucos(\theta_U)+M_a\\
+m_l \ddot{x}_l &= -F_{B,x}+F_{C,x} \\ 
+m_l \ddot{y}_l &= -F_{B,y}+F_{C,y} -m_l g\\
+\end{aligned}
+\end{equation}
+
+
 References: \cite{Schilder2018} \cite{Hibbeler2013}
 % \begin{align}
 %     M_{ii}=

@@ -1,12 +1,23 @@
 clear
 timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
+% This code makes use of the Symbolic toolbox. Many of the numeric functions
+% were made with this toolbox. However, it is not needed to run, and the 
+% toolbox is very slow with calculations in loops.
+% Therefore an effort has made to seperate symbolic functions, and they can
+% be commented out if the Symbolic toolbox is not installed.
+% The only symbolic functions that are not separate are Phi_t and Phi_tt.
+% These should be calcualted manually for each function if the Symbolic 
+% toolbox is disabled. 
 
 % Control settings parameters
-calculate = true;
-plotBoolean = true;
+% VERY important for Simulink
+Tsample=0.02;   % sampling time for Zero Order Hold (ZOH) output blocks 
+TupdateRL=1e-3; % sample time for the Rotation matrix update. Smaller T->smaller errors
 
 % plot settings parameters
+calculate = true;
+plotBoolean = true;
 plot_positionBoolean = true;
 plot_velocityBoolean = true;
 plot_accelerationBoolean = true;
@@ -37,20 +48,20 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 
 % define the driving constraint functions
 %constant velocity
-% func.thetaA1=@(t)omega(1)*t ;
-% func.thetaA2=@(t)omega(2)*t;
-% func.thetaA3=@(t)omega(3)*t;
+% driveFunc.thetaA1=@(t)omega(1)*t ;
+% driveFunc.thetaA2=@(t)omega(2)*t;
+% driveFunc.thetaA3=@(t)omega(3)*t;
 %constant acceleration
 %alphaA=0.1*[1 1 2]';
-% func.thetaA1=@(t)0.5*alphaA(1)*t^2;
-% func.thetaA2=@(t)0.5*alphaA(2)*t^2;
-% func.thetaA3=@(t)0.5*alphaA(3)*t^2;
+% driveFunc.thetaA1=@(t)0.5*alphaA(1)*t^2;
+% driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
+% driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
 % harmonic
 delta_t = 0.1;
-end_time=6;
-func.thetaA1=@(t)(+30*pi/180)*sin(t);
-func.thetaA2=@(t)(-20*pi/180)*sin(t);
-func.thetaA3=@(t)(+45*pi/180)*sin(t);
+end_time=20;
+driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
+driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
+driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
 
 % common variables for calculation
 if calculate == true
@@ -60,7 +71,7 @@ if calculate == true
     tolerance = 0.0001;
 end
 
-%% symbolic variables used
+%% Symbolic variables definitions
 syms M_x U1_x U2_x U3_x L1_x L2_x L3_x P_x 
 syms M_y U1_y U2_y U3_y L1_y L2_y L3_y P_y 
 syms M_z U1_z U2_z U3_z L1_z L2_z L3_z P_z 
@@ -96,7 +107,14 @@ Q_sym=[M_x;  M_y;  M_z;
   ];
 Qvel_sym = sym('qvel',[length(Q_sym),1]);
 
+thetaA_sym=[thetaA1 ; thetaA2 ; thetaA3];
+%% independent and dependent co-ordinate indices
+ind_i=[7:9,19:21,31:33]';
+ind_d=(1:42)';
+ind_d(ind_i)=[]; % remove independent co-ordinates
+
 %% Set a good initial position
+%%% Important for Simulink
 %%%             z
 %%%             |
 %%% Start at 1__M__2_ _ _x          y
@@ -130,6 +148,8 @@ thetaU3_z_0=0; % angle in the x-y plane
 thetaL3_y_0=pi/4;
 thetaL3_z_0=thetaU3_z_0; 
 
+thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0]; % this is useful for Simulink
+
 % -L_b/2-L_u*sin(thetaA1)+L_l*sin(thetaL_y_0)+L_p/2=0
 L(2)=(L(4)/2-L(3)/2+L(1)*abs(sin(thetaU1_y_0)))/sin(thetaL1_y_0)
 if L(2)<=0
@@ -141,18 +161,15 @@ end
 %arm1
 R_A1=rot3D_Rodrigues([0;0;1],thetaU1_z_0); % constant
 R_L1_0=R_A1*rot3D_Rodrigues([0;1;0],thetaL1_y_0); % constant
-R_U1=R_A1*rot3D_Rodrigues([0;1;0],thetaA1); % symbolic
-R_U1_0=eval(subs(R_U1,thetaA1,thetaU1_y_0));% constant
+R_U1_0=R_A1*rot3D_Rodrigues([0;1;0],thetaA_0(1));
 %arm2
 R_A2=rot3D_Rodrigues([0;0;1],thetaU2_z_0); % constant
 R_L2_0=R_A2*rot3D_Rodrigues([0;1;0],thetaL2_y_0); % constant
-R_U2=R_A2*rot3D_Rodrigues([0;1;0],thetaA2); % symbolic
-R_U2_0=eval(subs(R_U2,thetaA2,thetaU2_y_0));% constant
+R_U2_0=R_A2*rot3D_Rodrigues([0;1;0],thetaA_0(2));
 %arm3
 R_A3=rot3D_Rodrigues([0;0;1],thetaU3_z_0); % constant
 R_L3_0=R_A3*rot3D_Rodrigues([0;1;0],thetaL3_y_0); % constant
-R_U3=R_A3*rot3D_Rodrigues([0;1;0],thetaA3); % symbolic
-R_U3_0=eval(subs(R_U3,thetaA3,thetaU3_y_0));% constant
+R_U3_0=R_A3*rot3D_Rodrigues([0;1;0],thetaA_0(3)); % symbolic
 
 q0(1:3)=zeros(3,1) ; % intial M
 % arm 1                                   
@@ -176,15 +193,20 @@ q0(40:42)=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0]; % inital P
 % P2=q0(22:24)+R_L2_0*[0;0;-L(2)/2]- R_A2*[L(3)/2;0 ;0];
 % P3=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0];
 
-% independent and dependent co-ordinate indices
-ind_i=[7:9,19:21,31:33]';
-ind_d=(1:42)';
-ind_d(ind_i)=[]; % remove independent co-ordinates
+R_L0=zeros(3,3,3);
+R_L0(:,:,1)=R_L1_0;
+R_L0(:,:,2)=R_L2_0;
+R_L0(:,:,3)=R_L3_0;
 
-q0d = q0(ind_d);
-q0i = q0(ind_i);
+q0d = q0(ind_d); % dependent co-ordinates. Used in Simulink
+q0i = q0(ind_i); % independent co-ordinates  Used in Simulink
 
-%% Rotation Matrices
+plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0 )
+%% Symbolic Rotation Matrices
+R_U1=R_A1*rot3D_Rodrigues([0;1;0],thetaA1); 
+R_U2=R_A2*rot3D_Rodrigues([0;1;0],thetaA2); 
+R_U3=R_A3*rot3D_Rodrigues([0;1;0],thetaA3);
+
 R_sym=sym(zeros(3,3,6));
 R_sym(:,:,1)=R_U1;
 R_sym(:,:,2)=R_U2;
@@ -193,18 +215,7 @@ R_sym(:,:,4)=R_L1;
 R_sym(:,:,5)=R_L2;
 R_sym(:,:,6)=R_L3;
 
-R_L0=zeros(3,3,3);
-R_L0(:,:,1)=R_L1_0;
-R_L0(:,:,2)=R_L2_0;
-R_L0(:,:,3)=R_L3_0;
-
-thetaA_sym=[thetaA1 ; thetaA2 ; thetaA3];
-thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0];
-
-plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0 )
-
-%% Solve Kinematics
-
+%% Symoblic Kinematics
 Phi= [...
     ... # Arm 1:  3x3 = 9 constraints
     [M_x;M_y;M_z] + R_A1*[L(4)/2; 0 ;0] - [U1_x; U1_y; U1_z] - R_U1*[0;0;L(1)/2];
@@ -215,24 +226,24 @@ Phi= [...
     % Therefore phi_0=thetaU1_x_0=0
     %     omega_U = R_U1*[0;omega_U;0]
     % so: theta_U = integral(R_U1*[0;omega_U;0])
-    thetaU1_x - R_U1(1,2)*func.thetaA1(t_sym) - 0; %thetaU1_x_0=0
-    thetaU1_y - R_U1(2,2)*func.thetaA1(t_sym) - thetaU1_y_0;% driving constraint
+    thetaU1_x - R_U1(1,2)*driveFunc.thetaA1(t_sym) - 0; %thetaU1_x_0=0
+    thetaU1_y - R_U1(2,2)*driveFunc.thetaA1(t_sym) - thetaU1_y_0;% driving constraint
     thetaU1_z - 0 - thetaU1_z_0; % note: R(3,2)=0 if phi_0=thetaU1_x_0=0
     ... # Arm 2:  3x3 = 9 constraints
     [M_x;M_y;M_z] + R_A2*[L(4)/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L(1)/2];
     [U2_x; U2_y; U2_z] + R_U2*[0;0;-L(1)/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L(2)/2];
     [L2_x; L2_y; L2_z] + R_L2*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A2*[L(3)/2;0 ;0];
     ... # upper angles: 3 constraints
-    thetaU2_x - R_U2(1,2)*func.thetaA2(t_sym) - 0; %thetaU2_x_0=0
-    thetaU2_y - R_U2(2,2)*func.thetaA2(t_sym) - thetaU2_y_0;% driving constraint
+    thetaU2_x - R_U2(1,2)*driveFunc.thetaA2(t_sym) - 0; %thetaU2_x_0=0
+    thetaU2_y - R_U2(2,2)*driveFunc.thetaA2(t_sym) - thetaU2_y_0;% driving constraint
     thetaU2_z - 0 - thetaU2_z_0; % note: this variable is not used    
     ... # Arm 3:  3x3 = 9 constraints
     [M_x;M_y;M_z] + R_A3*[L(4)/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L(1)/2];
     [U3_x; U3_y; U3_z] + R_U3*[0;0;-L(1)/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L(2)/2];
     [L3_x; L3_y; L3_z] + R_L3*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A3*[L(3)/2;0 ;0];
     ... # upper angles: 3 constraints
-    thetaU3_x - R_U3(1,2)*func.thetaA3(t_sym) - 0 ; %thetaU3_x_0=0
-    thetaU3_y - R_U3(2,2)*func.thetaA3(t_sym) - thetaU3_y_0;% driving constraint
+    thetaU3_x - R_U3(1,2)*driveFunc.thetaA3(t_sym) - 0 ; %thetaU3_x_0=0
+    thetaU3_y - R_U3(2,2)*driveFunc.thetaA3(t_sym) - thetaU3_y_0;% driving constraint
     thetaU3_z - 0 - thetaU3_z_0; % note: this variable is not used    
         ... # Fixed variables:  3 constraints
     [M_x;M_y;M_z];
@@ -320,7 +331,7 @@ if calculate == true
 %     QaccOld = calculate_acceleration(Jacobian,Phi_tt,Q_sym,R_sym,thetaA_sym,t_sym,Q,R1,R2,R3,Qvel,thetaA_t,time_range,L);
 %     toc
     tic
-    [Q,R1,R2,R3,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,func,L);
+    [Q,R1,R2,R3,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,driveFunc,L);
     Qvel = calculate_velocity_fast(Phi_t,t_sym,R1,R2,R3,thetaA_t,time_range,L);
     Qacc=calculate_acceleration_fast(Phi_tt,t_sym,R1,R2,R3,Qvel,thetaA_t,time_range,L);
     toc
@@ -342,7 +353,7 @@ if plotBoolean == true
         plot_tangents(Qvel, Qacc,time_valid);
     end
      if plot_positionBoolean == true
-        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_sym,thetaA_sym,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
+        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
     end
 end
 
@@ -429,5 +440,6 @@ tz=1/(wc*sqrt(alpha));
 tp=alpha*tz;
 ti=beta*tz;
 
+%save(sprintf('TestRun_%s',timestamp)); % save all variables
 
 

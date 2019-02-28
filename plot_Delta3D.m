@@ -1,4 +1,4 @@
-function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_sym,thetaA,R_L1,R_L2,R_L3,thetaA_t,time_range,delay_between_plots )
+function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,delay_between_plots )
     
 %%%             z
 %%%             |
