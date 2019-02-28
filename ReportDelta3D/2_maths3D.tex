@@ -223,6 +223,49 @@ This means the 2D equations \ref{eq:gammaIK} can be used:
 \end{aligned}
 \end{equation}
 
+\subsection{Kinetics}
+
+The 3D equations of motion for a centre of mass C are:
+\begin{equation}
+\begin{aligned}
+&m a_C^{O,O}=F^O \\
+&I^C \alpha_C^{O,O}+\tilde{\omega}_C^{C,O} I^C \omega_C^{C,O}=\tau^C
+\end{aligned}
+\end{equation}
+Using equation \ref{eq:Rdot}, the moments can also be expressed as:
+\begin{align*}
+I^C R^C_O\alpha_C^{O,O}+\tilde{\omega}_C^{O,O} R^O_C I^C R^C_O \omega_C^{O,O}=\tau^O \\
+\begin{bmatrix}
+I_{xx} & 0 & 0 \\
+0   & I_{yy} & 0 \\
+0 & 0 & I_{zz}
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_x \\
+\alpha_y \\
+\alpha_z
+\end{bmatrix}
+-
+\begin{bmatrix}
+(I_y-I_z)\omega_y \omega_z \\
+(I_z-I_x)\omega_x \omega_z \\
+(I_x-I_y)\omega_x \omega_y
+\end{bmatrix}
+=\tau^C
+\end{align*}
+The equations of motion given by \ref{eq:lambda} and \ref{eq:EoM} can still be used, as long as $Q_A$ takes into account the extra gyroscopic forces as well.\\
+
+Finally, the constraint forces can also be found by solving:
+\begin{equation}
+\begin{aligned}
+&m_U a_U^{O,O} = F_A + F_B +Q_{A,U} \\
+&I_U \alpha_C^{O,O}+\tilde{\omega}_C^{C,O} I_U \omega_C^{C,O} = \tilde{r}_A^{O,U}R^C_OF_A+\tilde{r}_B^{O,U}R^C_O F_B+\tau_i^U\\
+&m_L a_L^{O,O} = -F_B + F_C +Q_{A,L} \\
+\end{aligned}
+\end{equation}
+
+
+
 % Computer Torque Control
 % \begin{align}
 %          J&=\Phi_{q_d}^{-1}\Phi_{q_i} \\
