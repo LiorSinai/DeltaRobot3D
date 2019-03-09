@@ -1,5 +1,5 @@
 function R=rot3D_Rodrigues(n,theta)
-% Lior SInai, 25 December 2018
+% Lior Sinai, 25 December 2018
 % rotates a vector about a unit normal by an angle theta
 
 tol=1e-10; %tolerance
