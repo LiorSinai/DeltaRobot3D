@@ -1,5 +1,5 @@
 % plot_inverse
-% Plots the boundaries for a Delta Robot
+% Calculates and plots the boundaries for a Delta Robot
 clear
 
 SIZE_Q=42;
@@ -8,6 +8,7 @@ addpath('Numeric Functions')
 
 % input parameters
 L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
+%L =[0.8;0.8; 0.6;0.6];
 tolerance=0.0001;
 
 %% independent and dependent co-ordinate indices
@@ -99,19 +100,19 @@ R_L0=zeros(3,3,3);
 R_L0(:,:,1)=R_L1_0;
 R_L0(:,:,2)=R_L2_0;
 R_L0(:,:,3)=R_L3_0;
-
+figure;
 plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0 )
 
 qd0=q0(ind_d);
 
-run plot_boundaries;
+plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0);
 
 %% Calculate and show an extended position
 thetaA1=0.5;
 P0=[(0.5*(L_b-L_e)-(L_u+L_l)*sin(thetaA1))*cos(thetaU1_z_0);
     (0.5*(L_b-L_e)-(L_u+L_l)*sin(thetaA1))*sin(thetaU1_z_0);
                   -(L_u+L_l)*cos(thetaA1)];
-P0=0.999*P0;  
+P0=0.99*P0;  
 %P0=q0(40:42);
 qa0=[thetaA1; thetaA_0(2);thetaA_0(3)]; 
 [qa, ~, ~]=calculate_IK(L,qa0,P0,[0;0;0],[0;0;0],tolerance);
@@ -128,7 +129,7 @@ Qi(7:9,:)=[0;thetaU3_y_0;thetaU3_z_0]+[-sin(thetaU3_z_0);cos(thetaU3_z_0);0]*(qa
 Q(ind_i,:)= Qi;
 Q(ind_d,:)= Qd;
 
+figure;
 plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,qa0,0,0 )
-
-run plot_boundaries;
+plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0);
 

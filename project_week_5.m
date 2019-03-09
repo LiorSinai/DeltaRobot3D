@@ -354,7 +354,7 @@ if plotBoolean == true
     end
      if plot_positionBoolean == true
         figure; hold on;
-        run plot_boundaries;
+        plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0)
         plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
     end
 end

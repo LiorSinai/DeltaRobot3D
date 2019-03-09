@@ -1,4 +1,7 @@
 %% Plot boundaries
+function plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0)
+L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
+
 [X,Y,Z]=sphere(16);
 X=(L_u+L_l)*X;
 Y=(L_u+L_l)*Y;
@@ -28,3 +31,9 @@ set(hSphere3,'EdgeColor','None');
 
 % plot sphere centres
 plot(x10,y10,'ok',x20,y20,'om',x30,y30,'or')
+
+xmax=1.1*(L_u+L_l);
+ymax=xmax;
+zmax=xmax;
+ axis([-xmax,xmax,-ymax,ymax,-zmax,zmax]);
+end
