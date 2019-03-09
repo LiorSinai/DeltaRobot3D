@@ -95,9 +95,9 @@ R_U3_0=eval(subs(R_U3,thetaA3,thetaU3_y_0));% constant
 
 Phi= [...
     ... # Arm 1:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A1*[L(4)/2; 0 ;0] - [U1_x; U1_y; U1_z] - R_U1*[0;0;L(1)/2];
-    [U1_x; U1_y; U1_z] + R_U1*[0;0;-L(1)/2] - [L1_x; L1_y; L1_z] - R_L1*[0;0;L(2)/2];
-    [L1_x; L1_y; L1_z] + R_L1*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A1*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A1*[L_b/2; 0 ;0] - [U1_x; U1_y; U1_z] - R_U1*[0;0;L_u/2];
+    [U1_x; U1_y; U1_z] + R_U1*[0;0;-L_u/2] - [L1_x; L1_y; L1_z] - R_L1*[0;0;L_l/2];
+    [L1_x; L1_y; L1_z] + R_L1*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A1*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     % Important: R_U1(1,2) and R_U2(2,2) must not be functions of thetaU1
     % Therefore phi_0=thetaU1_x_0=0
@@ -107,17 +107,17 @@ Phi= [...
     thetaU1_y - R_U1(2,2)*omega(1)*t_sym - thetaU1_y_0;% driving constraint
     thetaU1_z - 0 - thetaU1_z_0; % note: R(3,2)=0 if phi_0=thetaU1_x_0=0
     ... # Arm 2:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A2*[L(4)/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L(1)/2];
-    [U2_x; U2_y; U2_z] + R_U2*[0;0;-L(1)/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L(2)/2];
-    [L2_x; L2_y; L2_z] + R_L2*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A2*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A2*[L_b/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L_u/2];
+    [U2_x; U2_y; U2_z] + R_U2*[0;0;-L_u/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L_l/2];
+    [L2_x; L2_y; L2_z] + R_L2*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A2*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     thetaU2_x - R_U2(1,2)*omega(2)*t_sym - 0;  
     thetaU2_y - R_U2(2,2)*omega(2)*t_sym - thetaU2_y_0;% driving constraint
     thetaU2_z - 0 - thetaU2_z_0; % note: this variable is not used    
     ... # Arm 3:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A3*[L(4)/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L(1)/2];
-    [U3_x; U3_y; U3_z] + R_U3*[0;0;-L(1)/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L(2)/2];
-    [L3_x; L3_y; L3_z] + R_L3*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A3*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A3*[L_b/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L_u/2];
+    [U3_x; U3_y; U3_z] + R_U3*[0;0;-L_u/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L_l/2];
+    [L3_x; L3_y; L3_z] + R_L3*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A3*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     thetaU3_x - R_U3(1,2)*omega(3)*t_sym - 0  ;
     thetaU3_y - R_U3(2,2)*omega(3)*t_sym - thetaU3_y_0;% driving constraint
@@ -149,20 +149,20 @@ Jacobian=jacobian(Phi,Q_sym);
 %         28:                  39
 %        U3_v U3_omega L3_v L3_omega
 %       P_v ]
-Jacobian(1:3,7:9)    =-R_U1*tilde([0;0;+L(1)/2]).'*R_U1.'; % check: =omegaTilde+omegaTilde.'=0
-Jacobian(4:6,7:9)    =+R_U1*tilde([0;0;-L(1)/2]).'*R_U1.';
-Jacobian(4:6,13:15)  =-R_L1*tilde([0;0;+L(2)/2]).'*R_L1.';
-Jacobian(7:9,13:15)  =+R_L1*tilde([0;0;-L(2)/2]).'*R_L1.';
+Jacobian(1:3,7:9)    =-R_U1*tilde([0;0;+L_u/2]).'*R_U1.'; % check: =omegaTilde+omegaTilde.'=0
+Jacobian(4:6,7:9)    =+R_U1*tilde([0;0;-L_u/2]).'*R_U1.';
+Jacobian(4:6,13:15)  =-R_L1*tilde([0;0;+L_l/2]).'*R_L1.';
+Jacobian(7:9,13:15)  =+R_L1*tilde([0;0;-L_l/2]).'*R_L1.';
 
-Jacobian(13:15,19:21) =-R_U2*tilde([0;0;+L(1)/2]).'*R_U2.';
-Jacobian(16:18,19:21) =+R_U2*tilde([0;0;-L(1)/2]).'*R_U2.';
-Jacobian(16:18,25:27) =-R_L2*tilde([0;0;+L(2)/2]).'*R_L2.';
-Jacobian(19:21,25:27) =+R_L2*tilde([0;0;-L(2)/2]).'*R_L2.';
+Jacobian(13:15,19:21) =-R_U2*tilde([0;0;+L_u/2]).'*R_U2.';
+Jacobian(16:18,19:21) =+R_U2*tilde([0;0;-L_u/2]).'*R_U2.';
+Jacobian(16:18,25:27) =-R_L2*tilde([0;0;+L_l/2]).'*R_L2.';
+Jacobian(19:21,25:27) =+R_L2*tilde([0;0;-L_l/2]).'*R_L2.';
 
-Jacobian(25:27,31:33) =-R_U3*tilde([0;0;+L(1)/2]).'*R_U3.';
-Jacobian(28:30,31:33) =+R_U3*tilde([0;0;-L(1)/2]).'*R_U3.';
-Jacobian(28:30,37:39) =-R_L3*tilde([0;0;+L(2)/2]).'*R_L3.';
-Jacobian(31:33,37:39) =+R_L3*tilde([0;0;-L(2)/2]).'*R_L3.';
+Jacobian(25:27,31:33) =-R_U3*tilde([0;0;+L_u/2]).'*R_U3.';
+Jacobian(28:30,31:33) =+R_U3*tilde([0;0;-L_u/2]).'*R_U3.';
+Jacobian(28:30,37:39) =-R_L3*tilde([0;0;+L_l/2]).'*R_L3.';
+Jacobian(31:33,37:39) =+R_L3*tilde([0;0;-L_l/2]).'*R_L3.';
 
 %lower link Jacobian
 Jacobian(40,13:15) = [0 1 0]*R_L1.'*tilde(R_L1_0*[1;0;0]);
@@ -229,20 +229,20 @@ subs(detJFK,R_L2,R_U2)
 %% Symoblic Gamma
 Gamma_1 = sym(zeros(size(Jacobian)));
 
-Gamma_1(1:3,7:9)    =-tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;+L(1)/2]).'*R_U1.';
-Gamma_1(4:6,7:9)    =+tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;-L(1)/2]).'*R_U1.';
-Gamma_1(4:6,13:15)  =-tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;+L(2)/2]).'*R_L1.';
-Gamma_1(7:9,13:15)  =+tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;-L(2)/2]).'*R_L1.';
+Gamma_1(1:3,7:9)    =-tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;+L_u/2]).'*R_U1.';
+Gamma_1(4:6,7:9)    =+tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;-L_u/2]).'*R_U1.';
+Gamma_1(4:6,13:15)  =-tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;+L_l/2]).'*R_L1.';
+Gamma_1(7:9,13:15)  =+tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;-L_l/2]).'*R_L1.';
 
-Gamma_1(13:15,19:21) =-tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;+L(1)/2]).'*R_U2.';
-Gamma_1(16:18,19:21) =+tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;-L(1)/2]).'*R_U2.';
-Gamma_1(16:18,25:27) =-tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;+L(2)/2]).'*R_L2.';
-Gamma_1(19:21,25:27) =+tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;-L(2)/2]).'*R_L2.';
+Gamma_1(13:15,19:21) =-tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;+L_u/2]).'*R_U2.';
+Gamma_1(16:18,19:21) =+tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;-L_u/2]).'*R_U2.';
+Gamma_1(16:18,25:27) =-tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;+L_l/2]).'*R_L2.';
+Gamma_1(19:21,25:27) =+tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;-L_l/2]).'*R_L2.';
 
-Gamma_1(25:27,31:33) =-tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;+L(1)/2]).'*R_U3.';
-Gamma_1(28:30,31:33) =+tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;-L(1)/2]).'*R_U3.';
-Gamma_1(28:30,37:39) =-tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;+L(2)/2]).'*R_L3.';
-Gamma_1(31:33,37:39) =+tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;-L(2)/2]).'*R_L3.';
+Gamma_1(25:27,31:33) =-tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;+L_u/2]).'*R_U3.';
+Gamma_1(28:30,31:33) =+tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;-L_u/2]).'*R_U3.';
+Gamma_1(28:30,37:39) =-tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;+L_l/2]).'*R_L3.';
+Gamma_1(31:33,37:39) =+tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;-L_l/2]).'*R_L3.';
 
 %lower link Jacobian
 Gamma_1(40,13:15) = [0 1 0]*(tilde(Qvel_sym(13:15))*R_L1).'*tilde(R_L1_0*[1;0;0]);

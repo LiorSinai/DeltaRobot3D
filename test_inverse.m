@@ -14,7 +14,7 @@ for testIndex=1:N
     qaAcc_t(:,testIndex)=qaAcc;
 end
 
-figure;
+figure('Name','Test: inverse calculations');
 plot(1:N,qa_t-thetaA_t,'x-')
 title('Error in \theta_A')
 

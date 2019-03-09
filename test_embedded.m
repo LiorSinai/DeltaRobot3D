@@ -73,11 +73,11 @@ for timeStep=1:Nvalid % test index
 end
 
 %% Plot results
-figure;
+figure('Name','Test: embedded accelerations');
 plot(1:Nvalid,Qacc(ind_i,:),'-',1:Nvalid,Qacc_emb,'.')
 title('Prescribed vs estimated accelerations (numeric)')
 
-figure;
+figure('Name','Test: embedded velocities');
 plot(1:Nvalid,Qvel_emb(ind_d,:)-Qvel(ind_d,:),'.')
 title('Errors for dependent velocities (numeric)')
 
@@ -169,14 +169,14 @@ for timeStep=1:Nvalid % test index
 end
 
 %% Plot results
-figure;
+figure('Name','Check: embedded accelerations');
 plot(1:Nvalid,Qacc(ind_i,:),'-',1:Nvalid,Qacc_emb2,'.')
 title('Prescribed vs estimated accelerations (symbolic)')
 
-figure;
+figure('Name','Check: embedded gamma');
 plot(1:Nvalid,Gamma_emb2-Gamma_emb,'.')
 title('Comparison of \gamma for symbolic and numeric calculations')
 
-figure;
+figure('Name','Check: embedded forces');
 plot(1:Nvalid,QHAT2-QHAT,'.')
 title('Comparison of $\hat{Q}$ for symbolic and numeric calculations','interpreter','Latex')

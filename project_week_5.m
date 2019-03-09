@@ -53,16 +53,16 @@ L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 % driveFunc.thetaA2=@(t)omega(2)*t;
 % driveFunc.thetaA3=@(t)omega(3)*t;
 %constant acceleration
-%alphaA=0.1*[1 1 2]';
-% driveFunc.thetaA1=@(t)0.5*alphaA(1)*t^2;
-% driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
-% driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
+alphaA=0.1*[1 1 2]';
+driveFunc.thetaA1=@(t)0.5*alphaA(1)*t^2;
+driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
+driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
 % harmonic
 delta_t = 0.1;
 end_time=10;
-driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
-driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
-driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
+% driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
+% driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
+% driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
 
 % common variables for calculation
 if calculate == true
@@ -152,10 +152,11 @@ thetaL3_z_0=thetaU3_z_0;
 thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0]; % this is useful for Simulink
 
 % -L_b/2-L_u*sin(thetaA1)+L_l*sin(thetaL_y_0)+L_p/2=0
-L(2)=(L(4)/2-L(3)/2+L(1)*abs(sin(thetaU1_y_0)))/sin(thetaL1_y_0)
-if L(2)<=0
+L_l=(L_b/2-L_e/2+L_u*abs(sin(thetaU1_y_0)))/sin(thetaL1_y_0)
+if L_l<=0
     error('Invalid initial configuration. L(2)<0')
 end
+L(2)=L_l;
 
 % Define rotation matrices
 %arm1
@@ -173,25 +174,25 @@ R_U3_0=R_A3*rot3D_Rodrigues([0;1;0],thetaA_0(3)); % symbolic
 
 q0(1:3)=zeros(3,1) ; % intial M
 % arm 1                                   
-q0(4:6)= q0(1:3)+R_A1*[L(4)/2; 0 ;0]-R_U1_0*[0;0;L(1)/2];  % initial U1
+q0(4:6)= q0(1:3)+R_A1*[L_b/2; 0 ;0]-R_U1_0*[0;0;L_u/2];  % initial U1
 q0(7:9)= [0;thetaU1_y_0;thetaU1_z_0];
-q0(10:12)=q0(4:6) +R_U1_0*[0;0;-L(1)/2]-R_L1_0*[0;0;L(2)/2]; % initial L1
+q0(10:12)=q0(4:6) +R_U1_0*[0;0;-L_u/2]-R_L1_0*[0;0;L_l/2]; % initial L1
 q0(13:15)=[0;thetaL1_y_0;thetaL1_z_0];
 % arm 2
-q0(16:18)= q0(1:3)+R_A2*[L(4)/2; 0 ;0]-R_U2_0*[0;0;L(1)/2];  % initial U2
+q0(16:18)= q0(1:3)+R_A2*[L_b/2; 0 ;0]-R_U2_0*[0;0;L_u/2];  % initial U2
 q0(19:21)= [0;thetaU2_y_0;thetaU2_z_0];
-q0(22:24)=q0(16:18) +R_U2_0*[0;0;-L(1)/2]-R_L2_0*[0;0;L(2)/2]; % initial L2
+q0(22:24)=q0(16:18) +R_U2_0*[0;0;-L_u/2]-R_L2_0*[0;0;L_l/2]; % initial L2
 q0(25:27)=[0;thetaL2_y_0;thetaL2_z_0];
 % arm 3
-q0(28:30)= q0(1:3)+R_A3*[L(4)/2; 0 ;0]-R_U3_0*[0;0;L(1)/2];  % initial U3
+q0(28:30)= q0(1:3)+R_A3*[L_b/2; 0 ;0]-R_U3_0*[0;0;L_u/2];  % initial U3
 q0(31:33)= [0;thetaU3_y_0;thetaU3_z_0];
-q0(34:36)=q0(28:30) +R_U3_0*[0;0;-L(1)/2]-R_L3_0*[0;0;L(2)/2]; % initial L3
+q0(34:36)=q0(28:30) +R_U3_0*[0;0;-L_u/2]-R_L3_0*[0;0;L_l/2]; % initial L3
 q0(37:39)=[0;thetaL3_y_0;thetaL3_z_0];
-q0(40:42)=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0]; % inital P
+q0(40:42)=q0(34:36)+R_L3_0*[0;0;-L_l/2]- R_A3*[L_e/2;0 ;0]; % inital P
 % Check P: the following should all be equal
-% P1=q0(10:12)+R_L1_0*[0;0;-L(2)/2]- R_A1*[L(3)/2;0 ;0]-q0(40:42)
-% P2=q0(22:24)+R_L2_0*[0;0;-L(2)/2]- R_A2*[L(3)/2;0 ;0]-q0(40:42)
-% P3=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0]-q0(40:42)
+% P1=q0(10:12)+R_L1_0*[0;0;-L_l/2]- R_A1*[L_e/2;0 ;0]-q0(40:42)
+% P2=q0(22:24)+R_L2_0*[0;0;-L_l/2]- R_A2*[L_e/2;0 ;0]-q0(40:42)
+% P3=q0(34:36)+R_L3_0*[0;0;-L_l/2]- R_A3*[L_e/2;0 ;0]-q0(40:42)
 
 R_L0=zeros(3,3,3);
 R_L0(:,:,1)=R_L1_0;
@@ -218,9 +219,9 @@ R_sym(:,:,6)=R_L3;
 %% Symoblic Kinematics
 Phi= [...
     ... # Arm 1:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A1*[L(4)/2; 0 ;0] - [U1_x; U1_y; U1_z] - R_U1*[0;0;L(1)/2];
-    [U1_x; U1_y; U1_z] + R_U1*[0;0;-L(1)/2] - [L1_x; L1_y; L1_z] - R_L1*[0;0;L(2)/2];
-    [L1_x; L1_y; L1_z] + R_L1*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A1*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A1*[L_b/2; 0 ;0] - [U1_x; U1_y; U1_z] - R_U1*[0;0;L_u/2];
+    [U1_x; U1_y; U1_z] + R_U1*[0;0;-L_u/2] - [L1_x; L1_y; L1_z] - R_L1*[0;0;L_l/2];
+    [L1_x; L1_y; L1_z] + R_L1*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A1*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     % Important: R_U1(1,2) and R_U2(2,2) must not be functions of thetaU1
     % Therefore phi_0=thetaU1_x_0=0
@@ -230,17 +231,17 @@ Phi= [...
     thetaU1_y - R_U1(2,2)*driveFunc.thetaA1(t_sym) - thetaU1_y_0;% driving constraint
     thetaU1_z - 0 - thetaU1_z_0; % note: R(3,2)=0 if phi_0=thetaU1_x_0=0
     ... # Arm 2:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A2*[L(4)/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L(1)/2];
-    [U2_x; U2_y; U2_z] + R_U2*[0;0;-L(1)/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L(2)/2];
-    [L2_x; L2_y; L2_z] + R_L2*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A2*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A2*[L_b/2; 0 ;0] - [U2_x; U2_y; U2_z] - R_U2*[0;0;L_u/2];
+    [U2_x; U2_y; U2_z] + R_U2*[0;0;-L_u/2] - [L2_x; L2_y; L2_z] - R_L2*[0;0;L_l/2];
+    [L2_x; L2_y; L2_z] + R_L2*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A2*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     thetaU2_x - R_U2(1,2)*driveFunc.thetaA2(t_sym) - 0; %thetaU2_x_0=0
     thetaU2_y - R_U2(2,2)*driveFunc.thetaA2(t_sym) - thetaU2_y_0;% driving constraint
     thetaU2_z - 0 - thetaU2_z_0; % note: this variable is not used    
     ... # Arm 3:  3x3 = 9 constraints
-    [M_x;M_y;M_z] + R_A3*[L(4)/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L(1)/2];
-    [U3_x; U3_y; U3_z] + R_U3*[0;0;-L(1)/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L(2)/2];
-    [L3_x; L3_y; L3_z] + R_L3*[0;0;-L(2)/2] - [P_x; P_y; P_z] - R_A3*[L(3)/2;0 ;0];
+    [M_x;M_y;M_z] + R_A3*[L_b/2; 0 ;0] - [U3_x; U3_y; U3_z] - R_U3*[0;0;L_u/2];
+    [U3_x; U3_y; U3_z] + R_U3*[0;0;-L_u/2] - [L3_x; L3_y; L3_z] - R_L3*[0;0;L_l/2];
+    [L3_x; L3_y; L3_z] + R_L3*[0;0;-L_l/2] - [P_x; P_y; P_z] - R_A3*[L_e/2;0 ;0];
     ... # upper angles: 3 constraints
     thetaU3_x - R_U3(1,2)*driveFunc.thetaA3(t_sym) - 0 ; %thetaU3_x_0=0
     thetaU3_y - R_U3(2,2)*driveFunc.thetaA3(t_sym) - thetaU3_y_0;% driving constraint
@@ -271,20 +272,20 @@ Jacobian=jacobian(Phi,Q_sym);
 %         28:                  39
 %        U3_v U3_omega L3_v L3_omega
 %       P_v ]
-Jacobian(1:3,7:9)    =-R_U1*tilde([0;0;+L(1)/2]).'*R_U1.';
-Jacobian(4:6,7:9)    =+R_U1*tilde([0;0;-L(1)/2]).'*R_U1.';
-Jacobian(4:6,13:15)  =-R_L1*tilde([0;0;+L(2)/2]).'*R_L1.';
-Jacobian(7:9,13:15)  =+R_L1*tilde([0;0;-L(2)/2]).'*R_L1.';
+Jacobian(1:3,7:9)    =-R_U1*tilde([0;0;+L_u/2]).'*R_U1.';
+Jacobian(4:6,7:9)    =+R_U1*tilde([0;0;-L_u/2]).'*R_U1.';
+Jacobian(4:6,13:15)  =-R_L1*tilde([0;0;+L_l/2]).'*R_L1.';
+Jacobian(7:9,13:15)  =+R_L1*tilde([0;0;-L_l/2]).'*R_L1.';
 
-Jacobian(13:15,19:21) =-R_U2*tilde([0;0;+L(1)/2]).'*R_U2.';
-Jacobian(16:18,19:21) =+R_U2*tilde([0;0;-L(1)/2]).'*R_U2.';
-Jacobian(16:18,25:27) =-R_L2*tilde([0;0;+L(2)/2]).'*R_L2.';
-Jacobian(19:21,25:27) =+R_L2*tilde([0;0;-L(2)/2]).'*R_L2.';
+Jacobian(13:15,19:21) =-R_U2*tilde([0;0;+L_u/2]).'*R_U2.';
+Jacobian(16:18,19:21) =+R_U2*tilde([0;0;-L_u/2]).'*R_U2.';
+Jacobian(16:18,25:27) =-R_L2*tilde([0;0;+L_l/2]).'*R_L2.';
+Jacobian(19:21,25:27) =+R_L2*tilde([0;0;-L_l/2]).'*R_L2.';
 
-Jacobian(25:27,31:33) =-R_U3*tilde([0;0;+L(1)/2]).'*R_U3.';
-Jacobian(28:30,31:33) =+R_U3*tilde([0;0;-L(1)/2]).'*R_U3.';
-Jacobian(28:30,37:39) =-R_L3*tilde([0;0;+L(2)/2]).'*R_L3.';
-Jacobian(31:33,37:39) =+R_L3*tilde([0;0;-L(2)/2]).'*R_L3.';
+Jacobian(25:27,31:33) =-R_U3*tilde([0;0;+L_u/2]).'*R_U3.';
+Jacobian(28:30,31:33) =+R_U3*tilde([0;0;-L_u/2]).'*R_U3.';
+Jacobian(28:30,37:39) =-R_L3*tilde([0;0;+L_l/2]).'*R_L3.';
+Jacobian(31:33,37:39) =+R_L3*tilde([0;0;-L_l/2]).'*R_L3.';
 
 %lower link Jacobian
 Jacobian(40,13:15) = [0 1 0]*R_L1.'*tilde(R_L1_0*[1;0;0]);
@@ -296,20 +297,20 @@ Phi_tt = diff(Phi_t,t_sym);
 
 Gamma_1 = sym(zeros(size(Jacobian)));
 
-Gamma_1(1:3,7:9)    =-tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;+L(1)/2]).'*R_U1.';
-Gamma_1(4:6,7:9)    =+tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;-L(1)/2]).'*R_U1.';
-Gamma_1(4:6,13:15)  =-tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;+L(2)/2]).'*R_L1.';
-Gamma_1(7:9,13:15)  =+tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;-L(2)/2]).'*R_L1.';
+Gamma_1(1:3,7:9)    =-tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;+L_u/2]).'*R_U1.';
+Gamma_1(4:6,7:9)    =+tilde(Qvel_sym(7:9))*R_U1*tilde([0;0;-L_u/2]).'*R_U1.';
+Gamma_1(4:6,13:15)  =-tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;+L_l/2]).'*R_L1.';
+Gamma_1(7:9,13:15)  =+tilde(Qvel_sym(13:15))*R_L1*tilde([0;0;-L_l/2]).'*R_L1.';
 
-Gamma_1(13:15,19:21) =-tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;+L(1)/2]).'*R_U2.';
-Gamma_1(16:18,19:21) =+tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;-L(1)/2]).'*R_U2.';
-Gamma_1(16:18,25:27) =-tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;+L(2)/2]).'*R_L2.';
-Gamma_1(19:21,25:27) =+tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;-L(2)/2]).'*R_L2.';
+Gamma_1(13:15,19:21) =-tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;+L_u/2]).'*R_U2.';
+Gamma_1(16:18,19:21) =+tilde(Qvel_sym(19:21))*R_U2*tilde([0;0;-L_u/2]).'*R_U2.';
+Gamma_1(16:18,25:27) =-tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;+L_l/2]).'*R_L2.';
+Gamma_1(19:21,25:27) =+tilde(Qvel_sym(25:27))*R_L2*tilde([0;0;-L_l/2]).'*R_L2.';
 
-Gamma_1(25:27,31:33) =-tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;+L(1)/2]).'*R_U3.';
-Gamma_1(28:30,31:33) =+tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;-L(1)/2]).'*R_U3.';
-Gamma_1(28:30,37:39) =-tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;+L(2)/2]).'*R_L3.';
-Gamma_1(31:33,37:39) =+tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;-L(2)/2]).'*R_L3.';
+Gamma_1(25:27,31:33) =-tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;+L_u/2]).'*R_U3.';
+Gamma_1(28:30,31:33) =+tilde(Qvel_sym(31:33))*R_U3*tilde([0;0;-L_u/2]).'*R_U3.';
+Gamma_1(28:30,37:39) =-tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;+L_l/2]).'*R_L3.';
+Gamma_1(31:33,37:39) =+tilde(Qvel_sym(37:39))*R_L3*tilde([0;0;-L_l/2]).'*R_L3.';
 
 %lower link Jacobian
 Gamma_1(40,13:15) = [0 1 0]*(tilde(Qvel_sym(13:15))*R_L1).'*tilde(R_L1_0*[1;0;0]);
@@ -362,11 +363,11 @@ end
 %% Kinetic Parameters
 m_u=0.35; % kg. Upper link mass
 m_l=0.35; % kg. Lower link mass
-I_upper_xx=(1/12)*m_u*L(1)^2;
-I_upper_yy=(1/12)*m_u*L(1)^2;
+I_upper_xx=(1/12)*m_u*L_u^2;
+I_upper_yy=(1/12)*m_u*L_u^2;
 I_upper_zz=I_upper_xx/10; 
-I_lower_xx=(1/12)*m_l*L(2)^2;
-I_lower_yy=(1/12)*m_l*L(2)^2;
+I_lower_xx=(1/12)*m_l*L_l^2;
+I_lower_yy=(1/12)*m_l*L_l^2;
 I_lower_zz=I_lower_xx/10;
 m_p   =1; % kg. end effector mass
 g=9.81; % m/s^2. Gravitational acceleration
@@ -408,7 +409,8 @@ if calculate==true
     fprintf('Starting tests ...\n')
     tic
     run test_forces.m;
-    %run test_embedded.m;
+    %run test_embedded.m; %symbolic checks are slow and since it now works,
+    %no longer needed
     %run test_inverse.m;
     fprintf('ending tests ...\n')
     toc
@@ -420,7 +422,7 @@ cycleTime = 0.35; %s for 1 kg
 % startDistance=0.025; %m
 % endDistance=0.305; %m
 % cycleDistance=endDistance-startDistance; %m
-% cycleAngle=atan2(cycleDistance,L(1)+L(2)); %=0.21*pi~pi/4
+% cycleAngle=atan2(cycleDistance,L_u+L_l); %=0.21*pi~pi/4
 
 % reference constants
 hm=45*pi/180; % required angle

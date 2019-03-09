@@ -25,7 +25,7 @@ wrenches(1).indPhi=[1:3,10:12]; % indices of the relevant constraint equations i
 r   =zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     R=R_A1*rot3D_Rodrigues([0;1;0],thetaA_t(1,timeStep));
-    r(:,timeStep)=R*[0; 0 ;+L(1)/2]; 
+    r(:,timeStep)=R*[0; 0 ;+L_u/2]; 
 end
 wrenches(1).r=r; % vector from U1 to A1 in the inertial frame
 
@@ -37,7 +37,7 @@ r=zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     %R=eval(subs(R_U1,thetaA1,thetaA_t(1,timeStep)));
     R=R_A1*rot3D_Rodrigues([0;1;0],thetaA_t(1,timeStep));%=R_U1
-    r(:,timeStep)=R*[0; 0 ;-L(1)/2]; % vector from U1 to B1  
+    r(:,timeStep)=R*[0; 0 ;-L_u/2]; % vector from U1 to B1  
 end
 wrenches(2).r=r;
 
@@ -50,7 +50,7 @@ r=zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     %R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep))); %slow
     R=R_A2*rot3D_Rodrigues([0;1;0],thetaA_t(2,timeStep));%=R_U2
-    r(:,timeStep)=R*[0; 0 ;+L(1)/2]; % vector from U2 to A2
+    r(:,timeStep)=R*[0; 0 ;+L_u/2]; % vector from U2 to A2
 end
 wrenches(3).r=r;
 
@@ -62,7 +62,7 @@ r=zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     %R=eval(subs(R_U2,thetaA2,thetaA_t(2,timeStep))); %slow
     R=R_A2*rot3D_Rodrigues([0;1;0],thetaA_t(2,timeStep));
-    r(:,timeStep)=R*[0; 0 ;-L(1)/2]; % vector from U2 to B2 
+    r(:,timeStep)=R*[0; 0 ;-L_u/2]; % vector from U2 to B2 
 end
 wrenches(4).r=r;
 
@@ -75,7 +75,7 @@ r=zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     %R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep))); %slow
     R=R_A3*rot3D_Rodrigues([0;1;0],thetaA_t(3,timeStep));
-    r(:,timeStep)=R*[0; 0 ;+L(1)/2]; % vector from U3 to A3
+    r(:,timeStep)=R*[0; 0 ;+L_u/2]; % vector from U3 to A3
 end
 wrenches(5).r=r;
 
@@ -87,7 +87,7 @@ r=zeros(3,Nvalid);
 for timeStep = 1:Nvalid
     %R=eval(subs(R_U3,thetaA3,thetaA_t(3,timeStep))); %slow
     R=R_A3*rot3D_Rodrigues([0;1;0],thetaA_t(3,timeStep));
-    r(:,timeStep)=R*[0; 0 ;-L(1)/2]; % vector from U3 to B3  
+    r(:,timeStep)=R*[0; 0 ;-L_u/2]; % vector from U3 to B3  
 end
 wrenches(6).r=r;
 
@@ -134,7 +134,7 @@ for timeStep = 1:Nvalid
 end
 
 %%
-figure;
+figure('Name','Moments arm 3');
 hold on
 colors={'k','b','r'};
 for k=1:3
@@ -148,7 +148,7 @@ title('Comparison of moments in the inertial and body fixed frame')
 legend('M3_x','M3_y','M3_z','MC3_x','MC3_y','MC3_z')
 
 % For PushDown, these should all align
-figure;
+figure('Name','Moments');
 specs={'-','-.','--x'};
 hold on
 for k=1:3
