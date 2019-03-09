@@ -2,6 +2,23 @@
 %Lior Sinai, 2019-02-24
 
 function [qa, qaVel, qaAcc]=calculate_IK(L,qa0,P,Pvel,Pacc,tolerance)
+% Caculates the actuator position, velocity and acceleration given the
+% end effector position, velocity and acceleration, for a single moment in
+% time.
+
+% INPUTS
+% L=[L_upper L_lower L_endEffector L_base] ... lengths
+% qa0 = 3x1 initial actuator co-ordinates (starting guess)
+% P = 3x1 end effector position
+% Pvel = 3x1 end effector velocity
+% Pacc = 3x1 end effector acceleration
+% tolerance = desired minimum for the Newton-Raphson iterations
+
+% OUTPUTS
+% qa = 3x1 actuator position
+% qaVel = 3x1 actuator velocities
+% qaAcc = 3x1 actuator accelerations
+
 % settings
 singularity=false;
 maxIteration=20;

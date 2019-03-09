@@ -3,6 +3,31 @@ function [lambda,Q_Ad_out]=calculate_lagrange_dependent(...
     R_A1,R_A2,R_A3,...
     R_L1_t,R_L2_t,R_L3_t,thetaA_t,...
     L,I_C,m_u,m_l,m_p,g)
+% Caculates Langrange multipliers for every timestep in Q for the dependent
+% co-ordinate. 
+
+% INPUTS
+% Qacc_i =  9xN independet co-ordinate accelerations
+% Qacc_d = 33xN dependet co-ordinate accelerations
+%   Qvel = 42xN co-ordinate velocities
+%   R_A1 = rotation matrix for base arm 1 about the z-axis
+%   R_A2 = rotation matrix for base arm 2 about the z-axis
+%   R_A3 = rotation matrix for base arm 3 about the z-axis
+% R_L1_t = 3x3xN rotation matrix for lower arm 1
+% R_L2_t = 3x3xN rotation matrix for lower arm 2
+% R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+%    I_C = 6x1 list of moment of inertias for the upper and lower arm
+%    m_u = mass of the upper link [kg]
+%    m_l = mass of the lower link [kg]
+%    m_p = mass of the end effector (point P) [kg]
+%     g = gravitational acceleration
+
+% OUTPUTS
+%  lambda = 33xN Lagrange multipliers at each time step
+%    Q_AC = Q_A-Q_C = 33xN applied forces and coriolis forces matrix
+
 SIZE_QD=33;
 
 N=size(thetaA_t,2);

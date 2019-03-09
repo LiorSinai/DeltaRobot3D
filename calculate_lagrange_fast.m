@@ -1,11 +1,29 @@
-function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L,M_C,I_C,Q_A)
+function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qvel,Qacc,R_L1_t,R_L2_t,R_L3_t,thetaA_t,time_range,L,M_C,I_C,Q_A)
+% Caculates Langrange multipliers for every timestep in Q. 
+
+% INPUTS
+%        Q = 42xN co-ordinate positions
+%     Qvel = 42xN co-ordinate velocities
+%     Qacc = 42xN co-ordinate accelerations
+%   R_L1_t = 3x3xN rotation matrix for lower arm 1
+%   R_L2_t = 3x3xN rotation matrix for lower arm 2
+%   R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% time_range = 1xN time values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths
+%      M_C = 42x42 matrix with the correct mass values. Moment of intertias
+%            should be zero, as they will not be used
+%      I_C = 6x1 list of moment of inertias for the upper and lower arm
+%      Q_A = 42x1 constant applied forces
+
+% OUTPUTS
+%  lambda = 42xN Lagrange multipliers at each time step
+%    Q_AC = Q_A-Q_C = 42xN applied forces and coriolis forces matrix
+
+    % initialise variables
     lambda=zeros(size(Q));
     Q_AC=zeros(size(Q));
     
-    % Note unlike in the main code, it is assumed variables are numeric
-    % E.g. R_L1 is a numeric matrix
-    % unless stated otherwise with _sym
-   
    I_upper_xx=I_C(1);
    I_upper_yy=I_C(2);
    I_upper_zz=I_C(3);
@@ -21,7 +39,7 @@ function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qv
     R_A2=rot3D_Rodrigues([0;0;1],thetaU2_z_0); % constant
     R_A3=rot3D_Rodrigues([0;0;1],thetaU3_z_0); % constant
    
-    N=size(thetaA,2);
+    N=size(thetaA_t,2);
     fprintf('%d time steps. Progess of lambdas: 000.0%%\n',N)
     for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of lambdas\n',timeStep,100*timeStep/length(time_range))
@@ -32,9 +50,9 @@ function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qv
         Q_AC(:,timeStep)=Q_A; % reset applied forces part
         
         % calcuate upper rotation matrices
-        R_U1 =R_A1*rot3D_Rodrigues([0;1;0],thetaA(1,timeStep));         
-        R_U2 =R_A2*rot3D_Rodrigues([0;1;0],thetaA(2,timeStep)); 
-        R_U3 =R_A3*rot3D_Rodrigues([0;1;0],thetaA(3,timeStep)); 
+        R_U1 =R_A1*rot3D_Rodrigues([0;1;0],thetaA_t(1,timeStep));         
+        R_U2 =R_A2*rot3D_Rodrigues([0;1;0],thetaA_t(2,timeStep)); 
+        R_U3 =R_A3*rot3D_Rodrigues([0;1;0],thetaA_t(3,timeStep)); 
         
         % Match R_L symbols to numeric values
         % R_L1
@@ -89,9 +107,9 @@ function [lambda, Q_AC] = calculate_lagrange_fast(Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qv
         Q_AC(31:33,timeStep)=Q_A(31:33)-C_U3;
         Q_AC(37:39,timeStep)=Q_A(37:39)-C_L3;
         
-        thetaA1=thetaA(1,timeStep);
-        thetaA2=thetaA(2,timeStep);
-        thetaA3=thetaA(3,timeStep);
+        thetaA1=thetaA_t(1,timeStep);
+        thetaA2=thetaA_t(2,timeStep);
+        thetaA3=thetaA_t(3,timeStep);
 
         J = Jacobian_Numeric(L(2),L(1),...
         rL1_1_1,rL1_1_2,...%R_L1

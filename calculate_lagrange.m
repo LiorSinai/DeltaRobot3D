@@ -1,4 +1,29 @@
-function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Qacc,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,M_C,I_C,Q_A)
+function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Qvel,Qacc,R_L1_t,R_L2_t,R_L3_t,thetaA_t,time_range,M_C,I_C,Q_A)
+% Caculates Langrange multipliers for every timestep in Q. Relies heavily
+% on the symbolic toolbox and is slow.
+
+% INPUTS
+% Jacobian = 42x42 symbolic matrix. Jacobian of the constraint equations
+%    Q_sym = 42xN symbolic co-ordinates
+%    R_sym = 3x3x6 set of symbolic 3x3 rotation matrices
+% thetaA_sym= 3xN symbolic actuator angles
+%        Q = 42xN co-ordinate positions
+%     Qvel = 42xN co-ordinate velocities
+%     Qacc = 42xN co-ordinate accelerations
+%   R_L1_t = 3x3xN rotation matrix for lower arm 1
+%   R_L2_t = 3x3xN rotation matrix for lower arm 2
+%   R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% time_range = 1xN time values
+%      M_C = 42x42 matrix with the correct mass values. Moment of intertias
+%            should be zero, as they will not be used
+%      I_C = 6x1 list of moment of inertias for the upper and lower arm
+%      Q_A = 42x1 constant applied forces
+
+% OUTPUTS
+%  lambda = 42xN Lagrange multipliers at each time step
+%    Q_AC = Q_A-Q_C = 42xN applied forces and coriolis forces matrix
+
     lambda=zeros(size(Q));
     Q_AC=zeros(size(Q));
     
@@ -13,16 +38,16 @@ function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Q
    I_lower_yy=I_C(5);
    I_lower_zz=I_C(6);
       
-    N=size(thetaA,2);
+    N=size(thetaA_t,2);
     fprintf('%d time steps. Progess of lambdas: 000.0%%\n',N)
     for timeStep = 1:N
         %fprintf('% d ... %.1f%% complete of lambdas\n',timeStep,100*timeStep/length(time_range))
         fprintf('\b\b\b\b\b\b\b')  %delete new line, % sign, previous number
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number
         
-        R_U1=eval(subs(R_sym(:,:,1),thetaA_sym(1),thetaA(1,timeStep)));
-        R_U2=eval(subs(R_sym(:,:,2),thetaA_sym(2),thetaA(2,timeStep)));
-        R_U3=eval(subs(R_sym(:,:,3),thetaA_sym(3),thetaA(3,timeStep)));
+        R_U1=eval(subs(R_sym(:,:,1),thetaA_sym(1),thetaA_t(1,timeStep)));
+        R_U2=eval(subs(R_sym(:,:,2),thetaA_sym(2),thetaA_t(2,timeStep)));
+        R_U3=eval(subs(R_sym(:,:,3),thetaA_sym(3),thetaA_t(3,timeStep)));
         R_L1=R_L1_t(:,:,timeStep);
         R_L2=R_L2_t(:,:,timeStep);
         R_L3=R_L3_t(:,:,timeStep);
@@ -65,7 +90,7 @@ function [lambda, Q_AC] = calculate_lagrange(Jacobian,Q_sym,R_sym,thetaA_sym,Q,Q
         Q_AC(37:39,timeStep)=Q_A(37:39)-C_L3;
 
         J=subs(Jacobian,[R_sym(:,:,4),R_sym(:,:,5),R_sym(:,:,6)],[R_L1,R_L2,R_L3]);
-        J=subs(J,thetaA_sym,thetaA(:,timeStep));
+        J=subs(J,thetaA_sym,thetaA_t(:,timeStep));
         J=eval(subs(J,Q_sym,Q(:,timeStep)));
 
         lambda(:,timeStep)=J.'\(Q_AC(:,timeStep)-M_0*Qacc(:,timeStep));

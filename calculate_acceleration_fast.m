@@ -1,6 +1,22 @@
-function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L)
+function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA_t,time_range,L)
+% Caluculates accelerations given all velocities and positions. Mostly
+% numeric functions. Only Phi_tt uses symbolic toolbox functions.
+% INPUTS
+% Phi_tt_sym = 42x1 symbolic function, second time derivative of the constraint equations
+%      t_sym = symbolic variable used in Phi_tt_sym
+% R_L1_t = 3x3xN rotation matrix for lower arm 1
+% R_L2_t = 3x3xN rotation matrix for lower arm 2
+% R_L3_t = 3x3xN rotation matrix for lower arm 3
+% Qvel   = 42xN velocites
+% thetaA_t = 3xN actuator angles
+% time_range = 1xN time values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+
+% OUTPUTS
+% accelerations = 42xN accelerations 
+
     SIZE_Q=42;
-    N=size(thetaA,2);
+    N=size(thetaA_t,2);
     accelerations = zeros(SIZE_Q,N);
     
     fprintf('%d time steps. Progess of accelerations: 000.0%%\n',N)
@@ -30,9 +46,9 @@ function accelerations = calculate_acceleration_fast(Phi_tt_sym,t_sym,R_L1_t,R_L
         rL3_2_1 = R_L3(2,1); rL3_2_2 = R_L3(2,2); rL3_2_3 = R_L3(2,3);
         rL3_3_1 = R_L3(3,1); rL3_3_2 = R_L3(3,2); rL3_3_3 = R_L3(3,3);
         
-        thetaA1=thetaA(1,timeStep);
-        thetaA2=thetaA(2,timeStep);
-        thetaA3=thetaA(3,timeStep);
+        thetaA1=thetaA_t(1,timeStep);
+        thetaA2=thetaA_t(2,timeStep);
+        thetaA3=thetaA_t(3,timeStep);
         
         J = Jacobian_Numeric(L(2),L(1),...
             rL1_1_1,rL1_1_2,...%R_L1

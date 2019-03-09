@@ -1,4 +1,12 @@
 function plot_velocity( velocities,time_range )
+% plots the components of each centre of mass' velocity seperately wrt
+% time. Plots are in a 3x2 subfigure and a seperate figure for the end 
+% effector
+
+% INPUTS 
+% velocities = 42xN velocity values
+% time_range = 1xN time values
+
 % Q=[M_x;  M_y;  M_z; 
 %     % arm 1
 %    U1_x; U1_y; U1_z; thetaU1_x; thetaU1_y; thetaU1_z;

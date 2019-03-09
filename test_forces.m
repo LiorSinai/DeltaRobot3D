@@ -13,7 +13,7 @@ time_valid=time_range(1:Nvalid); % if a singularity was hit, the valid_time
                                  
 errorForcesResidue=zeros(9,Nvalid);
 errorMomentsResidue=zeros(9,Nvalid);
-
+clear M1 M2 M3 M4 M5
 for timeStep = 1:Nvalid
     % map values
     forcesA1=wrenches(1).forces(:,timeStep);

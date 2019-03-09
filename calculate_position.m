@@ -1,5 +1,28 @@
 function [Q,R1_out,R2_out,R3_out,thetaA_t] = calculate_position( System,Jacobian,Q_sym,R_sym,thetaA_sym,t_sym,q0,thetaA_0,R_L0,time_range,tolerance )
-%UNTITLED6 Summary of this function goes here
+%Calcualtes the position co-ordiantes of a 3D Delta robot. Relies heavily
+%on the symbolic toolbox and therefore is very slow.
+
+% INPUTS
+% System = 42x1 symbolic system of constraint equations
+% Jacobian = 42x42 symbolic Jacobian of the system wrt 42 co-ordinates
+%  Q_sym = 42xN symbolic co-ordinates
+%  R_sym = 3x3x6 set of symbolic 3x3 rotation matrices
+% thetaA_sym= 3xN symbolic actuator angles
+%  t_sym = 1x1 symbol for time
+%     q0 = 42x1 initial position (guess)
+%thetaA_0 = 3x1 initial actuator angles (guess) 
+%   R_L0 = (3x3)x3 set of 3x3 rotation matrices. Initial values (guess)
+% time_range = 1xN time values. The first value should be 0 to confirm the
+% intial values/guesses
+% tolerance = desired accuracy for the Newton-Raphson iterations
+
+% OUTPUTS
+% Note: if a singularity is hit, N is changed to N=singularity time step
+% Q = 42xN co-ordinate values
+% R1_out= 3x3xN rotation matrices set for lower arm 1
+% R2_out= 3x3xN rotation matrices set for lower arm 2
+% R3_out= 3x3xN rotation matrices set for lower arm 3
+% thetaA_t = 3xN actuator angles
 
 Q=zeros(length(Q_sym),length(time_range));
 R1_out=zeros(3,3,length(time_range));

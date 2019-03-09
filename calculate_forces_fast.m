@@ -1,23 +1,28 @@
-function [forces,moments] = calculate_forces_fast(R_L1_t,R_L2_t,R_L3_t,thetaA,time_range,L,lambda,indQ,indPhi,r)
-    % Use the Lagrange multiplier method to find the forces at a point
-    % where the contraint equation in Phi are applied
-    N=size(thetaA,2);
+function [forces,moments] = calculate_forces_fast(R_L1_t,R_L2_t,R_L3_t,thetaA_t,time_range,L,lambda,indQ,indPhi,r)
+   % Use the Lagrange multiplier method to find the forces at a point
+% where the contraint equation in Phi are applied
     
+% INPUTS
+% R_L1_t = 3x3xN rotation matrix for lower arm 1
+% R_L2_t = 3x3xN rotation matrix for lower arm 2
+% R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths
+% lamdba = 42xN Lagrange multiplier values   
+% indQd = 6x1 indices of the dependent co-ordinates. Should be 6
+% consecutives for 3 x,y,z and 3 angles.
+% indPhi = 6x1 indices of the relevant constraints in Phi. Should be two sets
+% of 3 consecutive numbers.
+% r = 3xN vector from the CoM co-ordinate to the contraint co-ordinate
+
+% OUTPUTS
+% forces =  3xN translational forces in the inertial frame
+% moments = 3xN moments (rotational forces) in the inertial frame
+
+    %initialise variables
+    N=size(thetaA_t,2);
     forces=zeros(3,N);
-    moments=forces;
-    
-    % Note unlike in the main code, it is assumed variables are numeric
-    % E.g. R_L1 is a numeric matrix
-    % unless stated otherwise with _sym
-    
-    % indQ = indices of the general co-ordinates Q variables. Should be 6
-    % consecutives for 3 x,y,z and 3 angles 
-    
-    % indPhi = indices of the relevant constraints in Phi. Should be two
-    % sets of 3 consecutive numbers.
-    
-    % r = vector from the CoM co-ordinate to the contraint co-ordinate
-    
+    moments=forces;  
     
     fprintf('%d time steps. Progess of forces: 000.0%%\n',N)
     for timeStep = 1:N
@@ -44,9 +49,9 @@ function [forces,moments] = calculate_forces_fast(R_L1_t,R_L2_t,R_L3_t,thetaA,ti
         rL3_2_1 = R_L3(2,1); rL3_2_2 = R_L3(2,2); rL3_2_3 = R_L3(2,3);
         rL3_3_1 = R_L3(3,1); rL3_3_2 = R_L3(3,2); rL3_3_3 = R_L3(3,3);
 
-        thetaA1=thetaA(1,timeStep);
-        thetaA2=thetaA(2,timeStep);
-        thetaA3=thetaA(3,timeStep);
+        thetaA1=thetaA_t(1,timeStep);
+        thetaA2=thetaA_t(2,timeStep);
+        thetaA3=thetaA_t(3,timeStep);
 
         J = Jacobian_Numeric(L(2),L(1),...
         rL1_1_1,rL1_1_2,...%R_L1

@@ -1,6 +1,6 @@
 % 3 February 2019
 % Test Embedded Formulation
-% Should run prokect_week_5/m first to get:
+% Should run prokect_week_5.m first to get:
 %   all symbols
 %   all rotation matrices
 %   Q_AC

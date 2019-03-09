@@ -1,5 +1,20 @@
-function Qacc_d=caculate_acceleration_dependent(Qacc_i,Qvel,R_L1_t,R_L2_t,R_L3_t,thetaA_t,L)
+function Qacc_d=calculate_acceleration_dependent(Qacc_i,Qvel,R_L1_t,R_L2_t,R_L3_t,thetaA_t,L)
 %Lior Sinai, 2019-02-23
+% Caluculates accelerations for the dependent co-ordinates given known
+% accelerations for the independent co-ordiantes and all velocities and
+% positions
+% INPUTS
+% Qacc_i =  9xN independent co-ordinate accelerations
+% Qvel   = 42xN velocites
+% R_L1_t = 3x3xN rotation matrix for lower arm 1
+% R_L2_t = 3x3xN rotation matrix for lower arm 2
+% R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angles
+% L=[L_upper L_lower L_endEffector L_base] ... lengths
+
+% OUTPUTS
+% Qacc_d = 33xN dependent co-ordinate accelerations
+
 SIZE_QD=33;
 SIZE_QI=9;
 SIZE_Q=42;

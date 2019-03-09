@@ -1,7 +1,12 @@
 function plot_tangents(velocities, accelerations,time_range)
-% plot the magnitude of the velocities
-% and the accelerations in the direction of the velocities (tangential
-% accelerations)
+% plot the magnitude of the velocities and the accelerations in the 
+% direction of the velocities (tangential accelerations)
+
+% INPUTS 
+% velocities = 42xN velocity values
+% accelerations = 42xN acceleration values
+% time_range = 1xN time values
+
     % centers of mass arm1
     U1v=velocities(4:6,:);
     U1a=accelerations(4:6,:);

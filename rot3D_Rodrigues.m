@@ -1,6 +1,13 @@
 function R=rot3D_Rodrigues(n,theta)
 % Lior Sinai, 25 December 2018
-% rotates a vector about a unit normal by an angle theta
+% Returns a rotation matrix for a co-ordinate transform. Note that a vector 
+% will require Rvec=R' to be rotated. 
+% INPUTS
+% n=3x1 unit normal vector, axis of rotation
+% theta = angle [rad]
+
+% OUPUTS
+% R = 3x3 rotation matrix
 
 tol=1e-10; %tolerance
 if (~isequal([3 1],size(n)))

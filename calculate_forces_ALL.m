@@ -1,9 +1,34 @@
 function wrenches=calculate_forces_ALL(lambda,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,L)
+% Calculates forces and moments using the lagrange multiplier method for all
+% the points on the upper arms where constraint forces are applied.
+
 % This code is written for the controlled system
 % Therefore the Jacobian used is Jacobian_d and the indices specfied
 % below are for Qd, Phi_without_Driving and Jacobian_d
 % If running a kinematically driven system, then run the script
-% project_week_5.forces.m instead
+% project_week_5_forces.m instead
+
+% INPUTS
+% lamdba = 33xN Lagrange multiplier values for the dependent co-ordinates
+%   R_A1 = rotation matrix for base arm 1 about the z-axis
+%   R_A2 = rotation matrix for base arm 2 about the z-axis
+%   R_A3 = rotation matrix for base arm 3 about the z-axis
+%   R_L1 = 3x3xN rotation matrix for lower arm 1
+%   R_L2 = 3x3xN rotation matrix for lower arm 2
+%   R_L3 = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths
+
+% OUTPUTS
+% wrenches = 6x1 struct with fields:
+%    point = char
+%    body  = char
+%    indQ  = 6x1 indices in the Jacobian_d
+%    indPhi = 6x1 indices in the Jacobian_d
+%    r     = 3xN position vector from the point (Centre of Mass) to the contraint point
+%    forces = 3xN translational forces in the inertial frame
+%    moments  = 3xN moments (rotational forces) in the inertial frame
+%    momentsC = 3xN moments (rotational forces) in the body frame
 
 N=size(thetaA_t,2); % number of valid points
 

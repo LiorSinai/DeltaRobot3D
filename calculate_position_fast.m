@@ -1,8 +1,28 @@
 function [Q,R1_out,R2_out,R3_out,thetaA_t] = calculate_position_fast(q0,thetaA_0,R_L0,time_range,tolerance,driveFunc,L)
 % fast calulation for the position
 % does not use the Symbloic toolbox (but that is used to make the Jacobian function)
-% This less general than the normal code, as it uses a pre-defined system matrix
+% This is less general than the normal code, as it uses a pre-defined system matrix
 % and Jacobian
+
+% INPUTS
+%  q0 = 42x1 initial position (guess)
+%thetaA_0 = 3x1 initial actuator angles (guess) 
+%  R_L0 = (3x3)x3 set of 3x3 rotation matrices. Initial values (guess)
+% time_range = 1xN time values. The first value should be 0 to confirm the
+% intial values/guesses
+% tolerance = desired accuracy for the Newton-Raphson iterations
+% driveFunc = 3x1 struct of anoymous functions for the driving constraint.
+%            This essentially provides the same flexibility in input driving
+%            functions as the symbolic toolbox would be able to do.
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+
+% OUTPUTS
+% Note: if a singularity is hit, N is changed to N=singularity time step
+% Q = 42xN co-ordinate values
+% R1_out= 3x3xN rotation matrices set for lower arm 1
+% R2_out= 3x3xN rotation matrices set for lower arm 2
+% R3_out= 3x3xN rotation matrices set for lower arm 3
+% thetaA_t = 3xN actuator angles
 
 %% initialise variables
 SIZE_Q=42;

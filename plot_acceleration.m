@@ -1,4 +1,8 @@
 function plot_acceleration( accelerations,time_range,delta_t )
+% plots the components of each centre of mass' acceleration seperately wrt
+% time. Plots are in a 3x2 subfigure and a seperate figure for the end 
+% effector
+
 % Q=[M_x;  M_y;  M_z; 
 %     % arm 1
 %    U1_x; U1_y; U1_z; thetaU1_x; thetaU1_y; thetaU1_z;

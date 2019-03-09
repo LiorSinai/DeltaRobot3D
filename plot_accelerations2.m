@@ -1,6 +1,15 @@
 function plot_accelerations2( velocities,time_range )
-% Note: based off plot_velocity code. So variable names make more sense for
+% plots the components of each centre of mass' acceleration seperately wrt
+% time. Plots are in a 3x2 subfigure and a seperate figure for the end 
+% effector
+% Note : based off plot_velocity code. So variable names make more sense for
 % plot_velocity
+
+% INPUTS 
+% velocities = 42xN acceleration values
+% time_range = 1xN time values
+
+
 % Q=[M_x;  M_y;  M_z; 
 %     % arm 1
 %    U1_x; U1_y; U1_z; thetaU1_x; thetaU1_y; thetaU1_z;

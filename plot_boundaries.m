@@ -1,7 +1,15 @@
 %% Plot boundaries
 function plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0)
+% Plots the spherical boundaries of each arm. The end effector is bound to
+% the intersection of the spheres.
+% INPUTS
+% L = [L_u L_L L_e L_b]; a vector of lengths
+% thetaU1_z_0 thetaU2_z_0 thetaU3_z_0 ... the (constant) angle in the x-y 
+% plane of the upper arms.
+
 L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 
+% set sphere properties
 [X,Y,Z]=sphere(16);
 X=(L_u+L_l)*X;
 Y=(L_u+L_l)*Y;

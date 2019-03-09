@@ -1,12 +1,27 @@
-function velocities = calculate_velocity_fast( Phi_t_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,thetaA,time_range,L)
+function velocities = calculate_velocity_fast( Phi_t_sym,t_sym,R_L1_t,R_L2_t,R_L3_t,thetaA_t,time_range,L)
+% Calculate velocities for the co-ordinates given known positions.  This
+% version reduces reliance on the symbolic toolbox to a minimum, which 
+%improves the performance.
+
+% INPUTS
+%  Phi_t_sym = 42x1 symbolic derivative of the constrain equation vector Phi
+%  t_sym = 1x1 time symbol
+% thetaA_sym= 3xN symbolic actuator angles
+%   R_L1_t = 3x3xN rotation matrix for lower arm 1
+%   R_L2_t = 3x3xN rotation matrix for lower arm 2
+%   R_L3_t = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% time_range = 1xN time values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+
+% OUTPUTS
+% velocities =42xN velocities for each co-ordinate at each time step    
+
     SIZE_Q=42;
-    N=size(thetaA,2);
+    N=size(thetaA_t,2);
     velocities = zeros(SIZE_Q,N);
     
-    % To decrease calculation term further, manually recreate Phi_t
-    % But this limits the application, as Phi_t can change easily based on
-    % the desired input moments, but the the Jacobian should be the same 
-    % for all configurations of the Delta Robot
+    % Manually recreate Phi_t if not using the symbolic toolbox:
 %     Phi_t=zeros(SIZE_Q,1);
 
     fprintf('%d time steps. Progess of velocities: 000.0%%\n',N)
@@ -37,9 +52,9 @@ function velocities = calculate_velocity_fast( Phi_t_sym,t_sym,R_L1_t,R_L2_t,R_L
         rL3_2_1 = R_L3(2,1); rL3_2_2 = R_L3(2,2); rL3_2_3 = R_L3(2,3);
         rL3_3_1 = R_L3(3,1); rL3_3_2 = R_L3(3,2); rL3_3_3 = R_L3(3,3);
         
-        thetaA1=thetaA(1,timeStep);
-        thetaA2=thetaA(2,timeStep);
-        thetaA3=thetaA(3,timeStep);
+        thetaA1=thetaA_t(1,timeStep);
+        thetaA2=thetaA_t(2,timeStep);
+        thetaA3=thetaA_t(3,timeStep);
         
         J = Jacobian_Numeric(L(2),L(1),...
             rL1_1_1,rL1_1_2,...%R_L1

@@ -16,8 +16,8 @@ Tsample=0.02;   % sampling time for Zero Order Hold (ZOH) output blocks
 TupdateRL=1e-3; % sample time for the Rotation matrix update. Smaller T->smaller errors
 
 % plot settings parameters
-calculate = true;
-plotBoolean = true;
+calculate = false;
+plotBoolean = false;
 plot_positionBoolean = true;
 plot_velocityBoolean = true;
 plot_accelerationBoolean = true;
@@ -53,16 +53,16 @@ L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 % driveFunc.thetaA2=@(t)omega(2)*t;
 % driveFunc.thetaA3=@(t)omega(3)*t;
 %constant acceleration
-alphaA=0.1*[1 1 2]';
-driveFunc.thetaA1=@(t)0.5*alphaA(1)*t^2;
-driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
-driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
+% alphaA=0.1*[1 1 2]';
+% driveFunc.thetaA1=@(t)0.5*alphaA(1)*t^2;
+% driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
+% driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
 % harmonic
-delta_t = 0.1;
+delta_t = 0.01;
 end_time=10;
-% driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
-% driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
-% driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
+driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
+driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
+driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
 
 % common variables for calculation
 if calculate == true

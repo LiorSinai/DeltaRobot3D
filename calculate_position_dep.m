@@ -1,8 +1,23 @@
 function [Qd,R1_out,R2_out,R3_out] = calculate_position_dep(q0,thetaA_t,R_L0,time_range,tolerance,L)
 % calulation for the dependent position co-ordinates
 % does not use the Symbloic toolbox (but that is used to make the Jacobian function)
-% This less general than the normal code, as it uses a pre-defined system matrix
+% This is less general than the normal code, as it uses a pre-defined system matrix
 % and Jacobian
+
+% INPUTS
+%  q0 = 42x1 initial position (guess). This is converted to q0d in the code
+% thetaA_t = 3xN actuator angle values
+%  R_L0 = (3x3)x3 set of 3x3 rotation matrices. Initial values (guess)
+% time_range = 1xN time values. 
+% tolerance = desired accuracy for the Newton-Raphson iterations
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+
+% OUTPUTS
+% Note: if a singularity is hit, N is changed to N=singularity time step
+% Qd = 33xN co-ordinate values
+% R1_out= 3x3xN rotation matrices set for lower arm 1
+% R2_out= 3x3xN rotation matrices set for lower arm 2
+% R3_out= 3x3xN rotation matrices set for lower arm 3
 
 %% initialise variables
 SIZE_QD=33;

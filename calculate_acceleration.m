@@ -1,10 +1,28 @@
-function accelerations = calculate_acceleration(Jacobian,Vt_sym,Q_sym,R_sym,thetaA_sym,t_sym,Q,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA,time_range,L)
-    N=size(thetaA,2);
+function accelerations = calculate_acceleration(Jacobian,Phi_tt_sym,Q_sym,R_sym,thetaA_sym,t_sym,Q,R_L1_t,R_L2_t,R_L3_t,Qvel,thetaA_t,time_range,L)
+% Caluculates accelerations given all velocities and positions. Mostly
+% numeric functions. Only Phi_tt uses symbolic toolbox functions.
+% INPUTS
+% Jacobian = 42x42 symbolic Jacobian of the system wrt 42 co-ordinates
+% Phi_tt_sym = 42x1 symbolic function, second time derivative of the constraint equations
+%  Q_sym = 42xN symbolic co-ordinates
+%  R_sym = (3x3)x6 set of symbolic 3x3 rotation matrices
+% thetaA_sym= 3xN symbolic actuator angles
+%  t_sym = 1x1 time symbol
+%      Q = 42xN co-ordinate positions
+% R_L1_t = (3x3)xN rotation matrix for lower arm 1
+% R_L2_t = (3x3)xN rotation matrix for lower arm 2
+% R_L3_t = (3x3)xN rotation matrix for lower arm 3
+% Qvel   = 42xN velocites
+% thetaA_t = 3xN actuator angles
+% time_range = 1xN time values
+% L=[L_upper L_lower L_endEffector L_base] ... lengths [m]
+
+% OUTPUTS
+% accelerations = 42xN accelerations 
+
+    N=size(thetaA_t,2);
     accelerations = zeros(length(Q_sym),N);
     
-    % Note unlike in the main code, it is assumed variables are numeric
-    % E.g. R_L1 is a numeric matrix
-    % unless stated otherwise with _sym
    R_L1_0=R_L1_t(:,:,1);
    R_L2_0=R_L2_t(:,:,1);
    R_L3_0=R_L3_t(:,:,1);
@@ -15,11 +33,11 @@ function accelerations = calculate_acceleration(Jacobian,Vt_sym,Q_sym,R_sym,thet
         fprintf('\b\b\b\b\b\b\b')  %delete new line, % sign, previous number
         fprintf('%05.1f%%\n',timeStep/N*100); %write the new number
         
-        Vt=eval(subs(Vt_sym,t_sym,time_range(timeStep)));
+        Vt=eval(subs(Phi_tt_sym,t_sym,time_range(timeStep)));
         
-        R_U1=eval(subs(R_sym(:,:,1),thetaA_sym(1),thetaA(1,timeStep)));
-        R_U2=eval(subs(R_sym(:,:,2),thetaA_sym(2),thetaA(2,timeStep)));
-        R_U3=eval(subs(R_sym(:,:,3),thetaA_sym(3),thetaA(3,timeStep)));
+        R_U1=eval(subs(R_sym(:,:,1),thetaA_sym(1),thetaA_t(1,timeStep)));
+        R_U2=eval(subs(R_sym(:,:,2),thetaA_sym(2),thetaA_t(2,timeStep)));
+        R_U3=eval(subs(R_sym(:,:,3),thetaA_sym(3),thetaA_t(3,timeStep)));
         R_L1=R_L1_t(:,:,timeStep);
         R_L2=R_L2_t(:,:,timeStep);
         R_L3=R_L3_t(:,:,timeStep);
@@ -48,7 +66,7 @@ function accelerations = calculate_acceleration(Jacobian,Vt_sym,Q_sym,R_sym,thet
         Gamma = Gamma_1*Qvel(:,timeStep);
         
         J=subs(Jacobian,[R_sym(:,:,4),R_sym(:,:,5),R_sym(:,:,6)],[R_L1,R_L2,R_L3]);
-        J=subs(J,thetaA_sym,thetaA(:,timeStep));
+        J=subs(J,thetaA_sym,thetaA_t(:,timeStep));
         J=eval(subs(J,Q_sym,Q(:,timeStep)));
         
         accelerations(:,timeStep) = J\(Vt-Gamma);

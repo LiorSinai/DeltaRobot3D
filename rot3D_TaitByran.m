@@ -8,7 +8,13 @@ function R=rot3D_TaitByran(phi, theta, psi)
 %                        bank, attitude, heading
 % See Representing Attitude: Euler Angles, Unit Quaternions, and Rotation
 % Vectors, James Diebel (2006)
-% Rotation matrix is for a co-ordinate transformation. Vector uses R'
+% Rotation matrix is for a co-ordinate transformation. Vectors use R'
+
+% INPUTS
+% phi, theta, psi = Euler angles
+
+% OUTPUTS
+% R = 3x3 rotation matrix
 
 % For symoblic checks
 %syms phi theta psi
