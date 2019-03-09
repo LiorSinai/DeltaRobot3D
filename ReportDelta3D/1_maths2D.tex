@@ -4,7 +4,7 @@
 	\centering
 	\includegraphics[width=0.7\textwidth]{figures/Initial_2D.png}                                                              
 	\caption[Initial configuration of the 2D Delta robot]{Initial configuration of the 2D Delta robot.}
-	\label{fig:initia2D}
+	\label{fig:initial2D}
 \end{figure}
 
 Constraint equations
@@ -23,6 +23,7 @@ Constraint equations
     \vdots \\
     \vdots
     \end{bmatrix}
+    \label{eq:Phi2D}
 \end{equation}
 
 \begin{equation}
@@ -65,15 +66,16 @@ Independent and Dependent Co-ordinates
 %\end{align}
 
 \subsection{Inverse Kinematics}
+\label{sec:Inverse2D}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{figures/Inverse_2D.png}                                                              
+	\includegraphics[width=\textwidth]{figures/Inverse_2D_boundaries.png}                                                     
 	\caption[Interpretation of the inverse kinematics equation]{Interpretation of the inverse kinematics equation. The circles are centered at $x=\mp\tfrac{1}{2}L_b-L_u cos(\theta_{U,j})\pm\tfrac{1}{2}L_e$  and $y=-L_u sin(\theta_{U,j})$}
 	\label{fig:inverse2D}
 \end{figure}
 
-
+By eliminating the dependent $x$ and $y$ co-ordinates in equation \ref{eq:Phi2D}, the following equations can be obtained:
 \begin{equation}
     \Phi^{IK}=
     \begin{bmatrix}
@@ -81,6 +83,24 @@ Independent and Dependent Co-ordinates
          \vdots
     \end{bmatrix}
 \end{equation}
+
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[width=0.7\textwidth]{figures/Inverse_2D_edge.png}                                                     
+%	\caption[Fully extended arm]{Fully extended arm. The boundaries are shown with the 'dot-solid' and 'dot-dash' lines.}
+%	\label{fig:inverse2D_edge}
+%\end{figure}
+
+The boundary is obtained by analysing the case where one arm is fully extended. That is, where $\theta_{U,j}=\theta_{L,j}$. See figure \ref{fig:inverse2D}.:
+\begin{align*}
+P_x&=\mp\tfrac{L_b}{2}-(L_u+L_l)cos(\theta_{U,j})\pm\tfrac{L_e}{2} \\
+P_y&=-(L_u+L_l)sin(\theta_{U,j})
+\end{align*}
+Eliminating $\theta_{U,j}$:
+\begin{equation}
+(P_x\pm\tfrac{L_b}{2}\mp\tfrac{L_e}{2})^2+P_y^2=(L_u+L_l)^2
+\end{equation}
+The workspace is the intersection of the two circles. When $L_e=L_b$, the two circles will merge into one full circle.
 
 \begin{align}
 \Phi^{IK} =& 0  \nonumber \\
@@ -98,7 +118,7 @@ The primary equation is:
 \begin{eqnarray}
 M\ddot{q}+\Phi_q^T\lambda=Q_A \label{eq:lambda}
 \end{eqnarray}
-Where $Q_A$ are the applied forces and $\lambda$ the Lagrange multipliers. The $\lambda$ can be solved for directly if $\Phi_q$ has full rank, which will be the case if it kinematically driven. Otherwise, $Phi_q$ will have more columns for co-ordinates $q$ than rows for constraint equations, and will not be invertible. They must then be solved for simultaneously with the accelerations:
+Where $Q_A$ are the applied forces and $\lambda$ the Lagrange multipliers. The $\lambda$ can be solved for directly if $\Phi_q$ has full rank, which will be the case if it kinematically driven. Otherwise, $\Phi_q$ will have more columns for co-ordinates $q$ than rows for constraint equations, and will not be invertible. They must then be solved for simultaneously with the accelerations:
 \begin{equation}
 \begin{bmatrix}
 M &\Phi_q^T \\
@@ -110,7 +130,7 @@ M &\Phi_q^T \\
 \end{bmatrix}
 =
 \begin{bmatrix}
-Q_a \\
+Q_A \\
 \gamma
 \end{bmatrix} \label{eq:EoM}
 \end{equation}

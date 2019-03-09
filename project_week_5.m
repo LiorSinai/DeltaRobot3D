@@ -24,6 +24,7 @@ plot_accelerationBoolean = true;
 
 % input parameters
 L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
+L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 
 % Push down settings
 % omega = 0.5*[1;1;1];
@@ -58,7 +59,7 @@ L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
 % driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
 % harmonic
 delta_t = 0.1;
-end_time=20;
+end_time=10;
 driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
 driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
 driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
@@ -155,7 +156,6 @@ L(2)=(L(4)/2-L(3)/2+L(1)*abs(sin(thetaU1_y_0)))/sin(thetaL1_y_0)
 if L(2)<=0
     error('Invalid initial configuration. L(2)<0')
 end
-    
 
 % Define rotation matrices
 %arm1
@@ -189,9 +189,9 @@ q0(34:36)=q0(28:30) +R_U3_0*[0;0;-L(1)/2]-R_L3_0*[0;0;L(2)/2]; % initial L3
 q0(37:39)=[0;thetaL3_y_0;thetaL3_z_0];
 q0(40:42)=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0]; % inital P
 % Check P: the following should all be equal
-% P1=q0(10:12)+R_L1_0*[0;0;-L(2)/2]- R_A1*[L(3)/2;0 ;0];
-% P2=q0(22:24)+R_L2_0*[0;0;-L(2)/2]- R_A2*[L(3)/2;0 ;0];
-% P3=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0];
+% P1=q0(10:12)+R_L1_0*[0;0;-L(2)/2]- R_A1*[L(3)/2;0 ;0]-q0(40:42)
+% P2=q0(22:24)+R_L2_0*[0;0;-L(2)/2]- R_A2*[L(3)/2;0 ;0]-q0(40:42)
+% P3=q0(34:36)+R_L3_0*[0;0;-L(2)/2]- R_A3*[L(3)/2;0 ;0]-q0(40:42)
 
 R_L0=zeros(3,3,3);
 R_L0(:,:,1)=R_L1_0;
@@ -293,7 +293,6 @@ Jacobian(42,37:39) = [0 1 0]*R_L3.'*tilde(R_L3_0*[1;0;0]);
 
 Phi_t  = diff(Phi,t_sym); 
 Phi_tt = diff(Phi_t,t_sym); 
-Velocity = -Jacobian\Phi_t; %very slow line of code
 
 Gamma_1 = sym(zeros(size(Jacobian)));
 
@@ -327,6 +326,7 @@ if calculate == true
     % Calculate for all time steps
 %     tic
 %     [Q,R1,R2,R3,thetaA_t] = calculate_position( Phi,Jacobian,Q_sym,R_sym,thetaA_sym,t_sym,q0,thetaA_0,R_L0,time_range,tolerance );
+%     Velocity = -Jacobian\Phi_t; %very slow line of code
 %     Qvel = calculate_velocity(Velocity,Q_sym,R_sym,thetaA_sym,t_sym,Q,R1,R2,R3,thetaA_t,time_range);    
 %     QaccOld = calculate_acceleration(Jacobian,Phi_tt,Q_sym,R_sym,thetaA_sym,t_sym,Q,R1,R2,R3,Qvel,thetaA_t,time_range,L);
 %     toc
@@ -353,6 +353,8 @@ if plotBoolean == true
         plot_tangents(Qvel, Qacc,time_valid);
     end
      if plot_positionBoolean == true
+        figure; hold on;
+        run plot_boundaries;
         plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
     end
 end
@@ -403,10 +405,12 @@ end
 
 %% Run tests
 if calculate==true
-    fprintf('Starting tests ...')
+    fprintf('Starting tests ...\n')
     tic
     run test_forces.m;
-    %run test_embedded.m
+    %run test_embedded.m;
+    %run test_inverse.m;
+    fprintf('ending tests ...\n')
     toc
 end
 

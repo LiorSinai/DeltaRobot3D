@@ -26,8 +26,7 @@ iter = 0;
 while (norm(Phi_IK) > tolerance)&& (~singularity)
     iter = iter +1;
     if iter>maxIteration
-        warning('iterions = %d. Probably hit a singularity\n',iter)
-        warning('aborting calculations\n')
+        warning('iterions = %d. Probably hit a singularity\naborting calculations\n',iter)
         % shorten time_range
         singularity=true;
         break;

@@ -102,7 +102,6 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
     C3_y = L3_y+R_L3_calc(2,:);
     C3_z = L3_z+R_L3_calc(3,:);
        
-    figure('Name','Position');
     for timeStep = 1:length(time_range)
         if timeStep==1
         % Make a brand new plot
@@ -151,7 +150,7 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
             [0,A3_z(timeStep),B3_z(timeStep),C3_z(timeStep),P_z(timeStep)],'blue'...
           );
 
-        xmax=abs(L(1))+abs(L(2));
+        xmax=1.2*(abs(L(1))+abs(L(2)));
         ymax=xmax;
         zmax=xmax;
         axis([-xmax,xmax,-ymax,ymax,-zmax,zmax]);
@@ -161,11 +160,11 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
         ylabel('y');
         zlabel('z');
         grid;
-        
-       
+              
         temptext=text(0,0,zmax*0.4,'Press any key to continue');
         pause;
         delete(temptext);
+        
         else
         % Keep labels, title, orientation, axes, etc
         % Update only values

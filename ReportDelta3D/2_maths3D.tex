@@ -24,14 +24,31 @@ q_a&=
 \end{bmatrix}
 \end{align}
 
+Rotation Matrices. $R_{A,j}$ and $R_{U,j}$ are calculated using Rodriguez's formula:
+\begin{align}
+R(n,\theta)&=I+\tilde{n} sin\theta +\tilde{n}^2(1-cos\theta), \; |n|=1 \\
+\begin{split}
+ R_{A} &= R([0,0,1]^T,\psi_{0})  \\
+         &=\begin{bmatrix}
+         cos\psi_0 & -sin\psi_0 & 0 \\
+         sin\psi_0 & \hphantom{-}cos\psi_0 & 0 \\
+         0 & 0 & 1
+         \end{bmatrix} \end{split} \\
+\begin{split}
+ R_{U} &= R_{A}R([0,1,0]^T,\theta_{a}) \\
+         &=\begin{bmatrix}
+        cos\theta_a  cos\psi_0 & -sin\psi_0 & cos\psi_0 sin\theta_a \\
+         cos\theta_a sin\psi_0 & \hphantom{-} cos\psi_0 & sin\psi_0 sin\theta_a\\
+         -sin\theta_a & 0 & cos\theta_a 
+         \end{bmatrix}    
+\end{split} 
+\end{align}
+
+Relation between actuator co-ordinates and independent co-ordinates.
 \begin{equation}
 \begin{aligned}
-\omega^{O,U}_a&=R^O_U \omega^{U,U}_a \\
-&=    \begin{bmatrix}
-cos(\theta_a) cos(\psi_0) & -sin(\psi_0) & cos(\psi_0) sin(\theta_a) \\
-cos(\theta_a) sin(\psi_0) & \hphantom{-} cos(\psi_0) & sin(\psi_0) sin(\theta_a)\\
--sin(\theta_a) & 0 & cos(\theta_a) 
-\end{bmatrix}
+\omega^{O,U}_a&=R^O_U \omega^{U,U}_a
+=    R^O_U
 \begin{bmatrix}
 0 \\ \omega_a \\0
 \end{bmatrix}\\
@@ -189,10 +206,18 @@ I & 0 & -R_{U,j}{\tilde r}^{U,U}_A R_{U,j}^T & 0 & 0 & ... \\
 
 
 \subsection{Inverse kinematics}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{figures/Boundaries_3D.png}                                                              
+	\caption[Boundaries of the 3D Delta robot]{Boundaries of the 3D Delta robot. The robot is bounded to the intersection of the 3 spheres, which is the dark shaded region.}
+	\label{fig:initia3D}
+\end{figure}
+
+
 Add the first 3 rows in equation \ref{eq:Phi3D}:
 \begin{equation}
     \begin{aligned}
-    r&= R_{L,j}\begin{bmatrix}0\\0\\L_l \end{bmatrix} = R_{A,j}\begin{bmatrix}\frac{L_b-L_e}{2}\\0\\0 \end{bmatrix} - R_{U,j}\begin{bmatrix}0\\0\\L_u  \end{bmatrix} - P  \\
+    r&= R_{L}\begin{bmatrix}0\\0\\L_l \end{bmatrix} = R_{A}\begin{bmatrix}\frac{L_b-L_e}{2}\\0\\0 \end{bmatrix} - R_{U}\begin{bmatrix}0\\0\\L_u  \end{bmatrix} - P  \\
 \therefore    r^Tr&=r^TR^TRr &
     \end{aligned}
 \end{equation}
@@ -203,7 +228,7 @@ Add the first 3 rows in equation \ref{eq:Phi3D}:
 %        (-L_ucos(\theta_{a,j})-P_z)^2 &= L_l^2
 %\end{aligned}
 \begin{split}
-\implies L_l^2 =&\left(\left(\tfrac{1}{2}(L_b-L_e)-L_u sin(\theta_{a,j})\right)cos(\psi_0) -P_x\right)^2+ \\       &\left(\left(\tfrac{1}{2}(L_b-L_e)-L_usin(\theta_{a,j})\right)sin(\psi_0)-P_y\right)^2+(-L_ucos(\theta_{a,j})-P_z)^2
+\implies L_l^2 =&\left(\left(\tfrac{1}{2}(L_b-L_e)-L_u sin\theta_{a}\right)cos\psi_0 -P_x\right)^2+ \\       &\left(\left(\tfrac{1}{2}(L_b-L_e)-L_usin\theta_{a}\right)sin\psi_0-P_y\right)^2+(-L_ucos\theta_{a}-P_z)^2
 \end{split}
 \end{equation}
 % \begin{equation}
@@ -214,7 +239,24 @@ Add the first 3 rows in equation \ref{eq:Phi3D}:
 %     \end{bmatrix}
 % \end{equation}
 
-This means the 2D equations \ref{eq:gammaIK} can be used:
+As with the 2D case in section \ref{sec:Inverse2D}, the boundary is defined by the case where 1 arm is fully extended, $R_L=R_U$:
+\begin{equation}
+\begin{aligned}
+P=\begin{bmatrix}
+	 \left(\tfrac{1}{2}(L_b-L_e)-(L_u+L_l) sin\theta_{a}\right)cos\psi_0\\
+	 \left(\tfrac{1}{2}(L_b-L_e)-(L_u+L_l) sin\theta_{a}\right)sin\psi_0\\
+	-(L_u+L_l)cos\theta_a
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+This is a sphere. Eliminating $\theta_a$ shows this more clearly:
+\begin{equation}
+(P_x-\tfrac{1}{2}(L_b-L_e)cos\psi_0)^2+(P_y-\tfrac{1}{2}(L_b-L_e)sin\psi_0)^2+P_z^2=(L_u+L_l)^2
+\end{equation}
+
+The delta robot is confined to the intersection of the 3 spheres.\\
+
+For the relationship of the end effector velocity and acceleration, a similar derivation for equation \ref{eq:gammaIK} for the 2D case is used:
 \begin{equation}
 \begin{aligned}
 \tfrac{d^2q_a}{dt^2}&=-\Phi_{q_a}^{-1}([\Phi_{q_a}\tfrac{dq_a}{dt}]_{q_a}\tfrac{dq_a}{dt}+[\Phi_{P}\tfrac{dP}{dt}]_{P}\tfrac{dP}{dt}+2[\Phi_{q_a}\tfrac{dq_a}{dt}]_{P}\tfrac{dP}{dt}+\Phi_P\tfrac{d^2P}{dt^2})\\

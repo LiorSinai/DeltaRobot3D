@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6745 64-bit) (preloaded format=pdflatex 2018.8.13)  24 FEB 2019 19:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6745 64-bit) (preloaded format=pdflatex 2018.8.13)  9 MAR 2019 18:50
 entering extended mode
 **"./Documentation 3D Delta Robot.tex"
 ("Documentation 3D Delta Robot.tex"
@@ -281,7 +281,11 @@ Package: appendix 2009/09/02 v1.2b extra appendix facilities
 \c@@ppsavesec=\count113
 \c@@ppsaveapp=\count114
 )
-("Documentation 3D Delta Robot.aux")
+("Documentation 3D Delta Robot.aux"
+
+LaTeX Warning: Label `fig:initia3D' multiply defined.
+
+)
 \openout1 = `"Documentation 3D Delta Robot.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -298,8 +302,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
-
-("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+ ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count115
 \scratchdimen=\dimen126
@@ -364,40 +367,52 @@ File: figures/Initial_2D.png Graphic file (type png)
 Package pdftex.def Info: figures/Initial_2D.png  used on input line 5.
 (pdftex.def)             Requested size: 241.49895pt x 142.2847pt.
  [3 <./figures/Initial_2D.png>]
-<figures/Inverse_2D.png, id=85, 785.18344pt x 612.03656pt>
-File: figures/Inverse_2D.png Graphic file (type png)
-<use figures/Inverse_2D.png>
-Package pdftex.def Info: figures/Inverse_2D.png  used on input line 71.
-(pdftex.def)             Requested size: 241.49895pt x 188.24448pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 95--96
-
- []
-
-[4 <./figures/Inverse_2D.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 116--118
+<figures/Inverse_2D_boundaries.png, id=85, 1267.73625pt x 615.80063pt>
+File: figures/Inverse_2D_boundaries.png Graphic file (type png)
+<use figures/Inverse_2D_boundaries.png>
+Package pdftex.def Info: figures/Inverse_2D_boundaries.png  used on input line 
+73.
+(pdftex.def)             Requested size: 345.0pt x 167.58388pt.
+ [4 <./figures/Inverse_2D_boundaries.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 126--128
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
 
  []
 
-) [5] (2_maths3D.tex
-<figures/Initial_3D.png, id=113, 1021.56656pt x 740.7675pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 146--148
+
+ []
+
+[5]) [6] (2_maths3D.tex
+<figures/Initial_3D.png, id=122, 1021.56656pt x 740.7675pt>
 File: figures/Initial_3D.png Graphic file (type png)
 <use figures/Initial_3D.png>
 Package pdftex.def Info: figures/Initial_3D.png  used on input line 5.
 (pdftex.def)             Requested size: 241.49895pt x 175.10898pt.
- [6 <./figures/Initial_3D.png>] [7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 255--257
+ [7 <./figures/Initial_3D.png>] [8] [9]
+<figures/Boundaries_3D.png, id=172, 1076.52188pt x 431.36156pt>
+File: figures/Boundaries_3D.png Graphic file (type png)
+<use figures/Boundaries_3D.png>
+Package pdftex.def Info: figures/Boundaries_3D.png  used on input line 211.
+(pdftex.def)             Requested size: 345.0pt x 138.24255pt.
+ [10 <./figures/Boundaries_3D.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 257--258
 
  []
 
-) [9] ("Documentation 3D Delta Robot.bbl")
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--299
+
+ []
+
+) [11] ("Documentation 3D Delta Robot.bbl")
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 40.
- [10]
+ [12]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 40.
 
 ("Documentation 3D Delta Robot.aux")
@@ -406,16 +421,20 @@ Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 40.
 Package rerunfilecheck Info: File `"Documentation 3D Delta Robot".out' has not 
 changed.
 (rerunfilecheck)             Checksum: 7A82B780720E8CF4A195CAD261BAB212;661.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 40.
  ) 
 Here is how much of TeX's memory you used:
- 6401 strings out of 492973
- 92590 string characters out of 3135932
- 196852 words of memory out of 3000000
- 10118 multiletter control sequences out of 15000+200000
+ 6417 strings out of 492973
+ 92907 string characters out of 3135932
+ 198967 words of memory out of 3000000
+ 10124 multiletter control sequences out of 15000+200000
  11709 words of font info for 46 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,28n,28p,458b,337s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 28i,28n,28p,459b,337s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
@@ -430,9 +449,9 @@ s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
 public/amsfonts/symbols/msam10.pfb>
-Output written on "Documentation 3D Delta Robot.pdf" (10 pages, 468415 bytes).
+Output written on "Documentation 3D Delta Robot.pdf" (12 pages, 573790 bytes).
 PDF statistics:
- 246 PDF objects out of 1000 (max. 8388607)
- 66 named destinations out of 1000 (max. 500000)
- 104 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 271 PDF objects out of 1000 (max. 8388607)
+ 75 named destinations out of 1000 (max. 500000)
+ 109 words of extra memory for PDF output out of 10000 (max. 10000000)
 
