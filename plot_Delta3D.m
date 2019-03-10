@@ -1,5 +1,5 @@
-function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,delay_between_plots )
-    
+function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,delay_between_plots,make_video )
+% Plot the Delta3D robot and animate it over a time range    
 %%%             z
 %%%             |
 %%% Start at 1__M__2_ _ _x          y
@@ -7,7 +7,33 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
 %%%          \     /L             \|_ _2 x
 %%%           \_P_/               /
 %%%                             1/
+% Q = 42xN co-ordinate positions
+% L =[L_upper L_lower L_endEffector L_base] ... lengths [m]    
+% R_A1 = 3x3 rotation matrix for base arm 1 about the z-axis
+% R_A2 = 3x3 rotation matrix for base arm 2 about the z-axis
+% R_A3 = 3x3 rotation matrix for base arm 3 about the z-axis
+% R_L1 = 3x3xN rotation matrix for lower arm 1
+% R_L2 = 3x3xN rotation matrix for lower arm 2
+% R_L3 = 3x3xN rotation matrix for lower arm 3
+% thetaA_t = 3xN actuator angle values
+% time_range = 1xN time values
+% delay_between_plots = 1x1 double, determines pause length between frames
+% make_video = boolean for making a video
 
+if make_video==true
+    %initiate variables
+    timestamp=datestr(now,'yyyymmdd_HHMMSS');
+    vid = VideoWriter(sprintf('Delta3D_%s',timestamp),'MPEG-4');
+    delta_t=time_range(2)-time_range(1);
+    vid.FrameRate=floor(1/delta_t);
+    open(vid)
+end
+
+%L
+    L_u=L(1); 
+    L_l=L(2);
+    L_b=L(3);
+    L_e=L(4);
     % Centers of Mass
     M_x = Q(1,:);
     M_y = Q(2,:);
@@ -122,6 +148,7 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
             [C1_y(timeStep), C2_y(timeStep), C3_y(timeStep),C1_y(timeStep)],...
             [C1_z(timeStep), C2_z(timeStep), C3_z(timeStep),C1_z(timeStep)],'k'...
         );
+       h.Trajectory=plot3(P_x(timeStep),P_y(timeStep),P_z(timeStep),'k-');
         h.arm1=plot3(... 
             ...% arm 1: centre of masses    
             U1_x(timeStep),U1_y(timeStep),U1_z(timeStep),'kx',...
@@ -150,7 +177,7 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
             [0,A3_z(timeStep),B3_z(timeStep),C3_z(timeStep),P_z(timeStep)],'blue'...
           );
 
-        xmax=1.2*(abs(L(1))+abs(L(2)));
+        xmax=1.1*(L_u+L_l+0.5*abs(L_b-L_e));
         ymax=xmax;
         zmax=xmax;
         axis([-xmax,xmax,-ymax,ymax,-zmax,zmax]);
@@ -172,14 +199,21 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
             h.M(1).XData=M_x(timeStep);
             h.M(1).YData=M_y(timeStep);
             h.M(1).ZData=M_z(timeStep);
-        % end effector         
+        % end effector
+           % centre of mass
             h.P(1).XData=P_x(timeStep);
             h.P(1).YData=P_y(timeStep);
             h.P(1).ZData=P_z(timeStep);
             
+            % triangle base
             h.P(2).XData=[C1_x(timeStep), C2_x(timeStep), C3_x(timeStep),C1_x(timeStep)];
             h.P(2).YData=[C1_y(timeStep), C2_y(timeStep), C3_y(timeStep),C1_y(timeStep)];
             h.P(2).ZData=[C1_z(timeStep), C2_z(timeStep), C3_z(timeStep),C1_z(timeStep)];
+            
+            % increase trajectory length
+            h.Trajectory.XData=[h.Trajectory.XData P_x(timeStep)];
+            h.Trajectory.YData=[h.Trajectory.YData P_y(timeStep)];
+            h.Trajectory.ZData=[h.Trajectory.ZData P_z(timeStep)];
          % Arm 1  
             h.arm1(1).XData=U1_x(timeStep);
             h.arm1(1).YData=U1_y(timeStep);
@@ -217,9 +251,17 @@ function plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R_L1,R_L2,R_L3,thetaA_t,time_range,del
             h.arm3(3).YData=[0,A3_y(timeStep),B3_y(timeStep),C3_y(timeStep),P_y(timeStep)];
             h.arm3(3).ZData=[0,A3_z(timeStep),B3_z(timeStep),C3_z(timeStep),P_z(timeStep)];
            
-            message.String=sprintf('%.1f s, step %d',time_range(timeStep),timeStep);     
+            message.String=sprintf('%.2f s, step %d',time_range(timeStep),timeStep);     
         end
         drawnow % update the plot so it shows the new values
+        if make_video==true
+            Frame=getframe(gcf);
+            writeVideo(vid,Frame);
+        end
         pause(delay_between_plots)
+    end
+    
+    if make_video==true
+        close(vid);
     end
 end

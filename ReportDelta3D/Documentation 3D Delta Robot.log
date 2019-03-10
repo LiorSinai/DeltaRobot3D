@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6745 64-bit) (preloaded format=pdflatex 2018.8.13)  9 MAR 2019 20:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6745 64-bit) (preloaded format=pdflatex 2018.8.13)  10 MAR 2019 10:27
 entering extended mode
 **"./Documentation 3D Delta Robot.tex"
 ("Documentation 3D Delta Robot.tex"
@@ -394,11 +394,11 @@ File: figures/Initial_3D.png Graphic file (type png)
 Package pdftex.def Info: figures/Initial_3D.png  used on input line 5.
 (pdftex.def)             Requested size: 241.49895pt x 175.10898pt.
  [7 <./figures/Initial_3D.png>] [8] [9]
-<figures/Boundaries_3D.png, id=172, 1076.52188pt x 431.36156pt>
+<figures/Boundaries_3D.png, id=172, 1117.92656pt x 434.37282pt>
 File: figures/Boundaries_3D.png Graphic file (type png)
 <use figures/Boundaries_3D.png>
 Package pdftex.def Info: figures/Boundaries_3D.png  used on input line 211.
-(pdftex.def)             Requested size: 345.0pt x 138.24255pt.
+(pdftex.def)             Requested size: 345.0pt x 134.05103pt.
  [10 <./figures/Boundaries_3D.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 257--258
 
@@ -448,7 +448,7 @@ s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
 public/amsfonts/symbols/msam10.pfb>
-Output written on "Documentation 3D Delta Robot.pdf" (12 pages, 573790 bytes).
+Output written on "Documentation 3D Delta Robot.pdf" (12 pages, 576700 bytes).
 PDF statistics:
  271 PDF objects out of 1000 (max. 8388607)
  75 named destinations out of 1000 (max. 500000)

@@ -7,7 +7,7 @@ timestamp=datestr(now,'yyyymmdd_HHMMSS');
 addpath('Numeric Functions')
 
 % input parameters
-L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
+L = [0.8,1,0.4,0.5]; % L_upper, L_lower, L_effector, L_base
 %L =[0.8;0.8; 0.6;0.6];
 tolerance=0.0001;
 
@@ -34,21 +34,21 @@ q0=ones(SIZE_Q,1);
 thetaU1_y_0=-pi/4;  
 thetaU1_z_0=-2*pi/3; % angle in the x-y plane
 % thetaL1_x_0=0;
-thetaL1_y_0=pi/4;
+thetaL1_y_0=pi/5;
 thetaL1_z_0=thetaU1_z_0;
 %arm2
 %thetaU2_x_0=0; % not free to choose.
 thetaU2_y_0=-pi/4;  
 thetaU2_z_0=2*pi/3; % angle in the x-y plane
 % thetaL2_x_0=0;
-thetaL2_y_0=pi/4;
+thetaL2_y_0=pi/5;
 thetaL2_z_0=thetaU2_z_0;
 %arm3
 %thetaU3_x_0=0; % not free to choose.
 thetaU3_y_0=-pi/4;  
 thetaU3_z_0=0; % angle in the x-y plane
 % thetaL3_x_0=0;
-thetaL3_y_0=pi/4;
+thetaL3_y_0=pi/5;
 thetaL3_z_0=thetaU3_z_0; 
 
 thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0]; % this is useful for Simulink
@@ -108,11 +108,11 @@ qd0=q0(ind_d);
 plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0);
 
 %% Calculate and show an extended position
-thetaA1=0.5;
+thetaA1=0.3;
 P0=[(0.5*(L_b-L_e)-(L_u+L_l)*sin(thetaA1))*cos(thetaU1_z_0);
     (0.5*(L_b-L_e)-(L_u+L_l)*sin(thetaA1))*sin(thetaU1_z_0);
                   -(L_u+L_l)*cos(thetaA1)];
-P0=0.99*P0;  
+P0=0.999*P0;  
 %P0=q0(40:42);
 qa0=[thetaA1; thetaA_0(2);thetaA_0(3)]; 
 [qa, ~, ~]=calculate_IK(L,qa0,P0,[0;0;0],[0;0;0],tolerance);

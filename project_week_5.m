@@ -19,11 +19,13 @@ TupdateRL=1e-3; % sample time for the Rotation matrix update. Smaller T->smaller
 calculate = false;
 plotBoolean = false;
 plot_positionBoolean = true;
-plot_velocityBoolean = true;
-plot_accelerationBoolean = true;
+plot_velocityBoolean = false;
+plot_accelerationBoolean = false;
+plot_tangentsBoolean=true;
+run_tests=false;
 
 % input parameters
-L = [0.5,1,0.3,0.8]; % L_upper, L_lower, L_effector, L_base
+L = [1,1,0.3,0.5]; % L_upper, L_lower, L_effector, L_base
 L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 
 % Push down settings
@@ -58,11 +60,11 @@ L_u=L(1); L_l=L(2); L_e=L(3); L_b=L(4);
 % driveFunc.thetaA2=@(t)0.5*alphaA(2)*t^2;
 % driveFunc.thetaA3=@(t)0.5*alphaA(3)*t^2;
 % harmonic
-delta_t = 0.01;
-end_time=10;
-driveFunc.thetaA1=@(t)(-30*pi/180)*sin(2*t);
-driveFunc.thetaA2=@(t)(-20*pi/180)*sin(t);
-driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t);
+delta_t = 0.05;
+end_time=13;
+driveFunc.thetaA1=@(t)(-50*pi/180)*sin(t);
+driveFunc.thetaA2=@(t)(-40*pi/180)*sin(t/2);
+driveFunc.thetaA3=@(t)(+45*pi/180)*sin(t/2);
 
 % common variables for calculation
 if calculate == true
@@ -132,21 +134,21 @@ q0=ones(size(Q_sym));
 thetaU1_y_0=-pi/4;  
 thetaU1_z_0=-2*pi/3; % angle in the x-y plane
 % thetaL1_x_0=0;
-thetaL1_y_0=pi/4;
+thetaL1_y_0=pi/5;
 thetaL1_z_0=thetaU1_z_0;
 %arm2
 %thetaU2_x_0=0; % not free to choose.
 thetaU2_y_0=-pi/4;  
 thetaU2_z_0=2*pi/3; % angle in the x-y plane
 % thetaL2_x_0=0;
-thetaL2_y_0=pi/4;
+thetaL2_y_0=pi/5;
 thetaL2_z_0=thetaU2_z_0;
 %arm3
 %thetaU3_x_0=0; % not free to choose.
 thetaU3_y_0=-pi/4;  
 thetaU3_z_0=0; % angle in the x-y plane
 % thetaL3_x_0=0;
-thetaL3_y_0=pi/4;
+thetaL3_y_0=pi/5;
 thetaL3_z_0=thetaU3_z_0; 
 
 thetaA_0=[thetaU1_y_0 ; thetaU2_y_0 ;thetaU3_y_0]; % this is useful for Simulink
@@ -202,7 +204,8 @@ R_L0(:,:,3)=R_L3_0;
 q0d = q0(ind_d); % dependent co-ordinates. Used in Simulink
 q0i = q0(ind_i); % independent co-ordinates  Used in Simulink
 
-plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0 )
+figure;
+plot_Delta3D( q0,L,R_A1,R_A2,R_A3,R_L1_0,R_L2_0,R_L3_0,thetaA_0,0,0,false )
 %% Symbolic Rotation Matrices
 R_U1=R_A1*rot3D_Rodrigues([0;1;0],thetaA1); 
 R_U2=R_A2*rot3D_Rodrigues([0;1;0],thetaA2); 
@@ -351,12 +354,16 @@ if plotBoolean == true
     end
     if plot_accelerationBoolean == true
         plot_accelerations2(Qacc,time_valid);
+    end
+    if plot_tangentsBoolean == true
         plot_tangents(Qvel, Qacc,time_valid);
     end
      if plot_positionBoolean == true
-        figure; hold on;
-        plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0)
-        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,thetaA_t,time_valid,delay_between_plots )
+        figure;
+        %plot_boundaries(L,thetaU1_z_0,thetaU2_z_0,thetaU3_z_0)        
+        plot_Delta3D( Q,L,R_A1,R_A2,R_A3,R1,R2,R3,...,
+            thetaA_t,time_valid,...
+            delay_between_plots ,false)
     end
 end
 
@@ -405,7 +412,7 @@ end
 %save(sprintf('TestRun_%s',timestamp)); % save all variables
 
 %% Run tests
-if calculate==true
+if calculate==true && run_tests==true
     fprintf('Starting tests ...\n')
     tic
     run test_forces.m;
@@ -417,7 +424,7 @@ if calculate==true
 end
 
 %% PID Controller
-emax=0.1; % m = 0.1mm. maximum error
+emax=0.01; % m = 0.1mm. maximum error
 cycleTime = 0.35; %s for 1 kg
 % startDistance=0.025; %m
 % endDistance=0.305; %m
@@ -428,7 +435,8 @@ cycleTime = 0.35; %s for 1 kg
 hm=45*pi/180; % required angle
 %hm=thetaA_0(1)*0.5;
 % hm=cycleAngle/2;
-tm=cycleTime; % required time to reach hm
+% tm=cycleTime; % required time to reach hm
+tm=0.2;
 h0=thetaA_0(1);
 
 % controller constansts
