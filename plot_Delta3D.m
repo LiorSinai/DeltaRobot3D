@@ -187,10 +187,12 @@ end
         ylabel('y');
         zlabel('z');
         grid;
-              
-        temptext=text(0,0,zmax*0.4,'Press any key to continue');
-        pause;
-        delete(temptext);
+        
+        if length(time_range)>2
+            temptext=text(0,0,zmax*0.4,'Press any key to continue');
+            pause;
+            delete(temptext);
+        end
         
         else
         % Keep labels, title, orientation, axes, etc
